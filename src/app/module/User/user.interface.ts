@@ -2,29 +2,32 @@
 import { Model } from 'mongoose';
 import { USER_ROLE } from './user.constant';
 
+
 export interface TUser {
-  id: string;
+  _id?: string;
+  name: string;
+  role: keyof typeof USER_ROLE;
   email: string;
   password: string;
-  needsPasswordChange: boolean;
   passwordChangedAt?: Date;
-  role: 'superAdmin' | 'admin' | 'student' | 'faculty';
   status: 'in-progress' | 'blocked';
   isDeleted: boolean;
+  cratedAt?: Date;
+  updatedAt?: Date;
 }
 
-export interface UserModel extends Model<TUser> {
+export interface IUserModel extends Model<TUser> {
   //instance methods for checking if the user exist
+  isUserExistByEmail(email: string): Promise<TUser>;
   isUserExistsByCustomId(id: string): Promise<TUser>;
   //instance methods for checking if passwords are matched
   isPasswordMatched(
     plainTextPassword: string,
     hashedPassword: string,
   ): Promise<boolean>;
-  isJWTIssuedBeforePasswordChanged(
+  isJWTIssuedBeforePasswordChange(
     passwordChangedTimestamp: Date,
     jwtIssuedTimestamp: number,
   ): boolean;
 }
 
-export type TUserRole = keyof typeof USER_ROLE;
