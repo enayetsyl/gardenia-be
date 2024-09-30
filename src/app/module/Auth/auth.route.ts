@@ -16,10 +16,20 @@ router.post('/login',
     validateRequest(AuthValidation.loginValidationSchema),
     AuthControllers.loginUser);
 
+router.post('/forget-password',
+    validateRequest(AuthValidation.forgetPasswordValidationSchema),
+    AuthControllers.forgetPassword);
+
+
 router.post('change-password',
     // auth(USER_ROLE.USER, USER_ROLE.ADMIN),
     validateRequest(AuthValidation.changePasswordValidationSchema),
     AuthControllers.changePassword);
+
+router.post('/reset-password', 
+    validateRequest(AuthValidation.resetPasswordValidationSchema),
+    AuthControllers.resetPassword
+)
 
 router.post('/refresh-token',
     validateRequest(AuthValidation.refreshTokenValidationSchema),

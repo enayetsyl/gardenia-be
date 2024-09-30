@@ -3,6 +3,7 @@ import config from "../../../config";
 import catchAsync from "../../utils/catchAsync";
 import sendResponse from "../../utils/sendResponse";
 import { AuthServices } from "./auth.service";
+import AppError from "../../errors/AppError";
 
 
 const registerUser = catchAsync(async (req, res) => {
@@ -73,9 +74,35 @@ const refreshToken = catchAsync(async (req, res) => {
   });
 })
 
+const forgetPassword = catchAsync(async (req, res) => {
+  console.log('forgot password request received', req.body)
+  const userEmail = req.body.email;
+  const result = await AuthServices.forgetPassword(userEmail);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Reset password link sent successfully',
+    data: result,
+  })
+})
+
+const resetPassword = catchAsync(async (req, res) => {
+ 
+
+  const result = await AuthServices.resetPassword(req.body);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Password reset successfully',
+    data: result,
+  })
+})
+
 export const AuthControllers = {
     registerUser,
     loginUser,
     changePassword,
-    refreshToken
+    refreshToken,
+    forgetPassword, resetPassword
 }

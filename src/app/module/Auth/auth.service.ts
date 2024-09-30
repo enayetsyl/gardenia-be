@@ -4,8 +4,10 @@ import { User } from "../User/user.model"
 import { TLoginUser, TRegisterUser } from "./auth.interface"
 import { USER_ROLE } from "../User/user.constant"
 import { createToken } from "../../utils/tokenGenerateFunction"
-import { JwtPayload } from "jsonwebtoken"
+import jwt, { JwtPayload } from "jsonwebtoken"
 import config from "../../../config"
+import { sendEmail } from "../../utils/sendEmail"
+import bcrypt from "bcrypt"
 
 
 const registerUser = async (payload: TRegisterUser) =>{
@@ -85,9 +87,63 @@ const refreshToken = async (token: string) =>{
 
 }
 
+
+const forgetPassword = async(userEmail: string) => {
+  const user = await User.isUserExistByEmail(userEmail)
+
+  if(!user){
+    throw new AppError(httpStatus.NOT_FOUND, "User does not exist")
+  }
+
+  const jwtPayload = {
+    userId: user?._id,
+    role : user?.role,
+  }
+
+  const resetToken = createToken(jwtPayload, config.jwt_access_secret as string, '10m')
+
+  const resetUILink = `${config.reset_pass_ui_link}/reset-password/${user._id}/${resetToken}`
+
+  sendEmail(user.email, resetUILink)
+
+}
+
+
+const resetPassword = async(payload:{ id: string; token: string; password: string } ) => {
+  console.log('id, token, password', payload)
+  const user = await User.isUserExistsByCustomId(payload?.id)
+
+   if(!user){
+    throw new AppError(httpStatus.NOT_FOUND, "User does not exist")
+  }
+
+  const decoded = jwt.verify(payload.token, config.jwt_access_secret as string) as JwtPayload
+
+  if(payload.id !== decoded?.userId){
+    throw new AppError(httpStatus.FORBIDDEN, "User does not exist")
+  }
+
+  const newHashedPassword = await bcrypt.hash(payload?.password, Number(config.bcrypt_salt_rounds))
+
+  console.log('user, decoded, hashed password', user, decoded, newHashedPassword)
+  
+  await User.findOneAndUpdate({
+    _id:decoded?.userId,
+    role: decoded?.role
+  }, 
+  {
+    password: newHashedPassword,
+    // needsPasswordChange: false,
+    // passwordChangedAt: new Date()
+  }
+)
+
+
+}
+
 export const AuthServices = {
     registerUser,
     loginUser,
     changePassword,
-    refreshToken,
+    refreshToken,forgetPassword, resetPassword
 }
