@@ -133,8 +133,7 @@ const resetPassword = async(payload:{ id: string; token: string; password: strin
   }, 
   {
     password: newHashedPassword,
-    // needsPasswordChange: false,
-    // passwordChangedAt: new Date()
+
   }
 )
 
