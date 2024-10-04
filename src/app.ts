@@ -15,13 +15,13 @@ const app: Application = express();
 app.use(express.json());
 app.use(cookieParser());
 
-app.use(cors({ origin: ['http://localhost:5173', 'http://localhost:3000', 'http://localhost:3001'], credentials: true }));
+app.use(cors({ origin: ['http://localhost:5173', 'http://localhost:3000', 'http://localhost:3001', "https://gardenia-fe.vercel.app"], credentials: true }));
 
 // application routes
 app.use('/api/v1', router); // /api/v1 will prefix all the route. This is the connection with the index.ts file inside the routes folder. 
 
 app.get('/', (req: Request, res: Response) => {
-  res.send('Hello from boiler plate code');
+  res.send('Hello gardenia backend code');
 });
 
 app.use(globalErrorHandler);  // This is connected with the globalErrorhandler.ts file at the middleware folder.
