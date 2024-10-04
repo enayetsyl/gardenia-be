@@ -15,7 +15,16 @@ const app: Application = express();
 app.use(express.json());
 app.use(cookieParser());
 
-app.use(cors({ origin: ['http://localhost:5173', 'http://localhost:3000', 'http://localhost:3001', "https://gardenia-fe.vercel.app"], credentials: true }));
+// CORS configuration
+app.use(cors({
+  origin: ['http://localhost:5173', 'http://localhost:3000', 'http://localhost:3001', 'https://gardenia-fe.vercel.app'],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
+// Handle preflight requests for all routes
+app.options('*', cors());
 
 // application routes
 app.use('/api/v1', router); // /api/v1 will prefix all the route. This is the connection with the index.ts file inside the routes folder. 
