@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const user_route_1 = require("../module/User/user.route");
 const auth_route_1 = require("../module/Auth/auth.route");
+const payment_route_1 = require("../module/Payment/payment.route");
 const router = (0, express_1.Router)();
 const moduleRoutes = [
     {
@@ -12,6 +13,10 @@ const moduleRoutes = [
     {
         path: '/auth',
         route: auth_route_1.AuthRoutes,
+    },
+    {
+        path: '/payment',
+        route: payment_route_1.PaymentRoutes,
     }
 ];
 moduleRoutes.forEach((route) => router.use(route.path, route.route)); // This will automatically loop your routes that you will add in the moduleRoutes array
