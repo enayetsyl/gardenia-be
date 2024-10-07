@@ -18,8 +18,6 @@ const bcrypt_1 = __importDefault(require("bcrypt"));
 const mongoose_1 = require("mongoose");
 const config_1 = __importDefault(require("../../../config"));
 const user_constant_1 = require("./user.constant");
-// Todo. Change the code as par your project need. Below mongoose schema, pre and post hook and static method code is shown for your reference. 
-//You can read my following blog to get deeper understanding about creating different types of schema and model https://dev.to/md_enayeturrahman_2560e3/how-to-create-api-in-an-industry-standard-app-44ck
 const userSchema = new mongoose_1.Schema({
     name: {
         type: String,
@@ -32,6 +30,9 @@ const userSchema = new mongoose_1.Schema({
             /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/,
             'Please enter a valid email address'
         ]
+    },
+    userImage: {
+        type: String,
     },
     password: {
         type: String,
@@ -47,6 +48,10 @@ const userSchema = new mongoose_1.Schema({
         required: true,
     },
     isDeleted: {
+        type: Boolean,
+        default: false,
+    },
+    isVerified: {
         type: Boolean,
         default: false,
     },

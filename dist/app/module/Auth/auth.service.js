@@ -24,13 +24,11 @@ const sendEmail_1 = require("../../utils/sendEmail");
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const registerUser = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const user = yield user_model_1.User.isUserExistByEmail(payload === null || payload === void 0 ? void 0 : payload.email);
-    console.log('user in service', user);
     if (user) {
         throw new AppError_1.default(http_status_1.default.NOT_FOUND, "User already exist");
     }
     payload.role = user_constant_1.USER_ROLE.USER;
     const newUser = yield user_model_1.User.create(payload);
-    console.log('newUser', newUser);
     const jwtPayload = {
         _id: newUser === null || newUser === void 0 ? void 0 : newUser._id,
         role: newUser === null || newUser === void 0 ? void 0 : newUser.role,
@@ -49,12 +47,13 @@ const registerUser = (payload) => __awaiter(void 0, void 0, void 0, function* ()
     };
 });
 const loginUser = (payload) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a, _b;
     const user = yield user_model_1.User.isUserExistByEmail(payload === null || payload === void 0 ? void 0 : payload.email);
     console.log('user in service', user);
     if (!user) {
         throw new AppError_1.default(http_status_1.default.NOT_FOUND, "User does not exist");
     }
-    if (!(yield user_model_1.User.isPasswordMatched(payload === null || payload === void 0 ? void 0 : payload.password, user === null || user === void 0 ? void 0 : user.password))) {
+    if (!(yield user_model_1.User.isPasswordMatched((_a = payload === null || payload === void 0 ? void 0 : payload.password) !== null && _a !== void 0 ? _a : '', (_b = user === null || user === void 0 ? void 0 : user.password) !== null && _b !== void 0 ? _b : ''))) {
         throw new AppError_1.default(http_status_1.default.FORBIDDEN, "Password does not match");
     }
     const jwtPayload = {
@@ -68,6 +67,7 @@ const loginUser = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     return {
         accessToken,
         refreshToken,
+        user
     };
 });
 const changePassword = (userData, payload) => __awaiter(void 0, void 0, void 0, function* () {

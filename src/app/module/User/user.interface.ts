@@ -8,12 +8,14 @@ export interface TUser {
   name: string;
   role: keyof typeof USER_ROLE;
   email: string;
+  userImage?: string; 
   password: string;
   passwordChangedAt?: Date;
   status: 'in-progress' | 'blocked';
   isDeleted: boolean;
   cratedAt?: Date;
   updatedAt?: Date;
+  isVerified: boolean;
 }
 
 export interface IUserModel extends Model<TUser> {

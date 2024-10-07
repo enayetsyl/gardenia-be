@@ -44,6 +44,15 @@ const getSingleUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, 
         data: user,
     });
 }));
+const uploadUserImage = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield user_service_1.UserServices.uploadUserImage(req.params.id, req.file);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: 'User image uploaded successfully!',
+        data: user,
+    });
+}));
 exports.UserControllers = {
-    userRegister, getAllUsers, getSingleUser
+    userRegister, getAllUsers, getSingleUser, uploadUserImage
 };

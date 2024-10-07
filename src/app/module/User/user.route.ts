@@ -6,8 +6,10 @@ import { UserControllers } from './user.controller';
 import { UserValidation } from './user.validation';
 import auth from '../../middlewares/auth';
 import { USER_ROLE } from './user.constant';
+import multer from 'multer';
+import path from 'path';
 
-// Todo. Everything in this file need to customize according to your requirement
+
 
 const router = express.Router();
 
@@ -17,6 +19,11 @@ router.post('/create-user',
   UserControllers.userRegister
 )
 
+router.post('/upload-image/:id',
+  // auth(USER_ROLE.USER, USER_ROLE.ADMIN),
+  upload.single('image'),
+  UserControllers.uploadUserImage
+);
 
 router.get('/', UserControllers.getAllUsers);
 router.get('/:id', UserControllers.getSingleUser);

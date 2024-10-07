@@ -10,9 +10,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserServices = void 0;
 const user_model_1 = require("./user.model");
+const sendImageToCloudinary_1 = require("../../utils/sendImageToCloudinary");
+const AppError_1 = __importDefault(require("../../errors/AppError"));
+const http_status_1 = __importDefault(require("http-status"));
 const createUser = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield user_model_1.User.create(payload);
     return result;
@@ -23,6 +29,29 @@ const getSingleUserFromDB = (id) => __awaiter(void 0, void 0, void 0, function* 
     const result = yield user_model_1.User.findById(id);
     return result;
 });
+const uploadUserImage = (id, file) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log('user id', id);
+    const user = yield user_model_1.User.findById(id);
+    console.log('user', user);
+    if (!user) {
+        throw new AppError_1.default(http_status_1.default.NOT_FOUND, 'User not found');
+    }
+    if (!file) {
+        throw new AppError_1.default(http_status_1.default.BAD_REQUEST, 'No image file provided');
+    }
+    // Generate a unique image name
+    const imageName = `user_${id}_${Date.now()}`;
+    // Upload image to Cloudinary
+    const result = yield (0, sendImageToCloudinary_1.sendImageToCloudinary)(imageName, file.path);
+    console.log('result', result);
+    // Update user with new image URL
+    const updatedUser = yield user_model_1.User.findByIdAndUpdate(id, { userImage: result.secure_url }, { new: true });
+    if (!updatedUser) {
+        throw new AppError_1.default(http_status_1.default.NOT_FOUND, 'User not found after update');
+    }
+    console.log('updatedUser', updatedUser);
+    return updatedUser;
+});
 exports.UserServices = {
-    getSingleUserFromDB, getAllUsersFromDB, createUser
+    getSingleUserFromDB, getAllUsersFromDB, createUser, uploadUserImage
 };

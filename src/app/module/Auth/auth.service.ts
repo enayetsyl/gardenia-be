@@ -1,19 +1,18 @@
 import httpStatus from "http-status"
 import AppError from "../../errors/AppError"
 import { User } from "../User/user.model"
-import { TLoginUser, TRegisterUser } from "./auth.interface"
 import { USER_ROLE } from "../User/user.constant"
 import { createToken } from "../../utils/tokenGenerateFunction"
 import jwt, { JwtPayload } from "jsonwebtoken"
 import config from "../../../config"
 import { sendEmail } from "../../utils/sendEmail"
 import bcrypt from "bcrypt"
+import { TUser } from "../User/user.interface"
 
 
-const registerUser = async (payload: TRegisterUser) =>{
-    const user = await User.isUserExistByEmail(payload?.email)
+const registerUser = async (payload: Partial<TUser>) =>{
+    const user = await User.isUserExistByEmail(payload?.email as string)
 
-    console.log('user in service', user)
 
     if(user){
         throw new AppError(httpStatus.NOT_FOUND, "User already exist")
@@ -23,7 +22,6 @@ const registerUser = async (payload: TRegisterUser) =>{
 
     const newUser = await User.create(payload)
 
-    console.log('newUser', newUser)
     const jwtPayload = {
         _id: newUser?._id,
         role: newUser?.role,
@@ -46,8 +44,8 @@ const registerUser = async (payload: TRegisterUser) =>{
 }
 
 
-const loginUser = async (payload: TLoginUser) =>{
-    const user = await User.isUserExistByEmail(payload?.email)
+const loginUser = async (payload: Partial<TUser>) =>{
+    const user = await User.isUserExistByEmail(payload?.email as string)
 
     console.log('user in service', user)
 
@@ -55,7 +53,7 @@ const loginUser = async (payload: TLoginUser) =>{
         throw new AppError(httpStatus.NOT_FOUND, "User does not exist")
     }
 
-    if(!(await User.isPasswordMatched(payload?.password, user?.password))){
+    if (!(await User.isPasswordMatched(payload?.password ?? '', user?.password ?? ''))) {
         throw new AppError(httpStatus.FORBIDDEN, "Password does not match")
     }
 
@@ -74,6 +72,7 @@ const loginUser = async (payload: TLoginUser) =>{
     return {
         accessToken,
         refreshToken,
+        user
     }
 }
 

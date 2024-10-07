@@ -50,7 +50,7 @@ const registerUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, v
 }));
 const loginUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield auth_service_1.AuthServices.loginUser(req.body);
-    const { accessToken, refreshToken } = result;
+    const { accessToken, refreshToken, user } = result;
     res.cookie("refreshToken", refreshToken, {
         httpOnly: true,
         secure: config_1.default.NODE_ENV === "production",
@@ -62,7 +62,7 @@ const loginUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void
         message: "User logged in successfully",
         data: {
             accessToken,
-            refreshToken
+            refreshToken, user
         }
     });
 }));

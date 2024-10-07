@@ -5,9 +5,7 @@ import { IUserModel, TUser } from './user.interface';
 import config from '../../../config';
 import { USER_ROLE } from './user.constant';
 
-// Todo. Change the code as par your project need. Below mongoose schema, pre and post hook and static method code is shown for your reference. 
 
-//You can read my following blog to get deeper understanding about creating different types of schema and model https://dev.to/md_enayeturrahman_2560e3/how-to-create-api-in-an-industry-standard-app-44ck
 
 const userSchema = new Schema<TUser, IUserModel>(
   {
@@ -23,6 +21,9 @@ const userSchema = new Schema<TUser, IUserModel>(
         'Please enter a valid email address'
       ]
     },
+    userImage: {
+      type: String,
+          },
     password: {
       type: String,
       required: true,
@@ -38,6 +39,10 @@ const userSchema = new Schema<TUser, IUserModel>(
     },
    
     isDeleted: {
+      type: Boolean,
+      default: false,
+    },
+    isVerified: {
       type: Boolean,
       default: false,
     },

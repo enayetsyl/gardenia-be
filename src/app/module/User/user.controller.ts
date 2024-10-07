@@ -35,9 +35,17 @@ const getSingleUser = catchAsync(async(req, res) => {
   });
 })
 
-
+const uploadUserImage = catchAsync(async(req, res) => {
+  const user = await UserServices.uploadUserImage(req.params.id, req.file as Express.Multer.File);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'User image uploaded successfully!',
+    data: user,
+  });
+})
 
 
 export const UserControllers = {
-  userRegister, getAllUsers, getSingleUser
+  userRegister, getAllUsers, getSingleUser, uploadUserImage
  };
