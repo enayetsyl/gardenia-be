@@ -139,9 +139,16 @@ const resetPassword = async(payload:{ id: string; token: string; password: strin
 
 }
 
+const getUserInfo = async (id: string) => {
+  const user = await User.findById(id)
+
+  return user
+
+}
+
 export const AuthServices = {
     registerUser,
     loginUser,
     changePassword,
-    refreshToken,forgetPassword, resetPassword
+    refreshToken,forgetPassword, resetPassword, getUserInfo
 }

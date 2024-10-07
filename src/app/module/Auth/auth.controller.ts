@@ -99,10 +99,20 @@ const resetPassword = catchAsync(async (req, res) => {
   })
 })
 
+const getUserInfo = catchAsync(async (req, res) => {
+  const result = await AuthServices.getUserInfo(req.params.id);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'User info fetched successfully',
+    data: result,
+  })
+})
+
 export const AuthControllers = {
     registerUser,
     loginUser,
     changePassword,
     refreshToken,
-    forgetPassword, resetPassword
+    forgetPassword, resetPassword, getUserInfo
 }

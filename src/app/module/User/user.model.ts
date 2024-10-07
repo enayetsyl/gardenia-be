@@ -24,6 +24,9 @@ const userSchema = new Schema<TUser, IUserModel>(
     userImage: {
       type: String,
           },
+    coverImage: {
+      type: String,
+    },
     password: {
       type: String,
       required: true,

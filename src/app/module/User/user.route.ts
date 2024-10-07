@@ -24,6 +24,11 @@ router.post('/upload-image/:id',
   upload.single('image'),
   UserControllers.uploadUserImage
 );
+router.post('/upload-cover-image/:id',
+  // auth(USER_ROLE.USER, USER_ROLE.ADMIN),
+  upload.single('image'),
+  UserControllers.uploadUserCoverImage
+);
 
 router.get('/', UserControllers.getAllUsers);
 router.get('/:id', UserControllers.getSingleUser);

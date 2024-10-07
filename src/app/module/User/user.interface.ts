@@ -9,6 +9,7 @@ export interface TUser {
   role: keyof typeof USER_ROLE;
   email: string;
   userImage?: string; 
+  coverImage?: string;
   password: string;
   passwordChangedAt?: Date;
   status: 'in-progress' | 'blocked';
