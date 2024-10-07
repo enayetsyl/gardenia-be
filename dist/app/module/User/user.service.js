@@ -52,6 +52,29 @@ const uploadUserImage = (id, file) => __awaiter(void 0, void 0, void 0, function
     console.log('updatedUser', updatedUser);
     return updatedUser;
 });
+const uploadUserCoverImage = (id, file) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log('user id', id);
+    const user = yield user_model_1.User.findById(id);
+    console.log('user', user);
+    if (!user) {
+        throw new AppError_1.default(http_status_1.default.NOT_FOUND, 'User not found');
+    }
+    if (!file) {
+        throw new AppError_1.default(http_status_1.default.BAD_REQUEST, 'No image file provided');
+    }
+    // Generate a unique image name
+    const imageName = `user_${id}_${Date.now()}`;
+    // Upload image to Cloudinary
+    const result = yield (0, sendImageToCloudinary_1.sendImageToCloudinary)(imageName, file.path);
+    console.log('result', result);
+    // Update user cover image with new image URL
+    const updatedUser = yield user_model_1.User.findByIdAndUpdate(id, { coverImage: result.secure_url }, { new: true });
+    if (!updatedUser) {
+        throw new AppError_1.default(http_status_1.default.NOT_FOUND, 'User not found after update');
+    }
+    console.log('updatedUser', updatedUser);
+    return updatedUser;
+});
 exports.UserServices = {
-    getSingleUserFromDB, getAllUsersFromDB, createUser, uploadUserImage
+    getSingleUserFromDB, getAllUsersFromDB, createUser, uploadUserImage, uploadUserCoverImage
 };

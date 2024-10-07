@@ -107,9 +107,13 @@ const resetPassword = (payload) => __awaiter(void 0, void 0, void 0, function* (
         password: newHashedPassword,
     });
 });
+const getUserInfo = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield user_model_1.User.findById(id);
+    return user;
+});
 exports.AuthServices = {
     registerUser,
     loginUser,
     changePassword,
-    refreshToken, forgetPassword, resetPassword
+    refreshToken, forgetPassword, resetPassword, getUserInfo
 };

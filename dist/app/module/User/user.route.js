@@ -17,6 +17,9 @@ router.post('/create-user', (0, auth_1.default)(user_constant_1.USER_ROLE.ADMIN)
 router.post('/upload-image/:id', 
 // auth(USER_ROLE.USER, USER_ROLE.ADMIN),
 sendImageToCloudinary_1.upload.single('image'), user_controller_1.UserControllers.uploadUserImage);
+router.post('/upload-cover-image/:id', 
+// auth(USER_ROLE.USER, USER_ROLE.ADMIN),
+sendImageToCloudinary_1.upload.single('image'), user_controller_1.UserControllers.uploadUserCoverImage);
 router.get('/', user_controller_1.UserControllers.getAllUsers);
 router.get('/:id', user_controller_1.UserControllers.getSingleUser);
 exports.UserRoutes = router;
