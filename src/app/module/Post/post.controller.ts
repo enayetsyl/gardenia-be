@@ -38,8 +38,48 @@ const getPost = catchAsync(async (req, res) => {
   });
 });
 
+const getNewsFeed = catchAsync(async (req, res) => {
+  const posts = await PostServices.getNewsFeed();
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Posts fetched successfully",
+    data: posts,
+  });
+});
+
+const upvotePost = catchAsync(async (req, res) => {
+  const postId = req.params.postId;
+  const userId = req.body.userId;
+  const post = await PostServices.upvotePost(postId, userId);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Post upvoted successfully",
+    data: post,
+  });
+});
+
+const removeUpvote = catchAsync(async (req, res) => {
+  const postId = req.params.postId;
+  const userId = req.body.userId;
+  const post = await PostServices.removeUpvote(postId, userId);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Post un-upvoted successfully",
+    data: post,
+  });
+});
+
+
+
+
 export const PostControllers = {
   getUpvote,
   createPost,
-  getPost
+  getPost,
+  getNewsFeed,
+  upvotePost,
+  removeUpvote
 }

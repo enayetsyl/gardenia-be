@@ -49,10 +49,7 @@ const postSchema = new mongoose_1.Schema({
         type: Number,
         default: 0,
     },
-    upvotedBy: [{
-            type: mongoose_1.Schema.Types.ObjectId,
-            ref: 'User',
-        }],
+    upvotedBy: [String],
     comments: [commentSchema],
     link: {
         type: String,

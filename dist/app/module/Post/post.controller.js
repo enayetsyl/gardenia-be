@@ -46,8 +46,42 @@ const getPost = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0
         data: posts,
     });
 }));
+const getNewsFeed = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const posts = yield post_service_1.PostServices.getNewsFeed();
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: "Posts fetched successfully",
+        data: posts,
+    });
+}));
+const upvotePost = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const postId = req.params.postId;
+    const userId = req.body.userId;
+    const post = yield post_service_1.PostServices.upvotePost(postId, userId);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: "Post upvoted successfully",
+        data: post,
+    });
+}));
+const removeUpvote = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const postId = req.params.postId;
+    const userId = req.body.userId;
+    const post = yield post_service_1.PostServices.removeUpvote(postId, userId);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: "Post un-upvoted successfully",
+        data: post,
+    });
+}));
 exports.PostControllers = {
     getUpvote,
     createPost,
-    getPost
+    getPost,
+    getNewsFeed,
+    upvotePost,
+    removeUpvote
 };

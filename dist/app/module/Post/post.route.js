@@ -11,4 +11,7 @@ const router = express_1.default.Router();
 router.get("/getUpvote/:id", post_controller_1.PostControllers.getUpvote);
 router.post("/create", sendImageToCloudinary_1.upload.array('images', 5), post_controller_1.PostControllers.createPost);
 router.get("/getPosts/:id", post_controller_1.PostControllers.getPost);
+router.get("/getNewsFeed", post_controller_1.PostControllers.getNewsFeed);
+router.post("/upvote/:postId", post_controller_1.PostControllers.upvotePost);
+router.post("/removeUpvote/:postId", post_controller_1.PostControllers.removeUpvote);
 exports.PostRoutes = router;

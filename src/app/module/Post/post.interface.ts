@@ -8,7 +8,7 @@ export type IPost = {
   isPremium?: boolean;
   userId: mongoose.Schema.Types.ObjectId;
   upvoteCount?: number;
-  upvotedBy?: mongoose.Schema.Types.ObjectId[];
+  upvotedBy?: string[];
   comments?: IComment[];
   link?: string;
   createdAt?: Date;

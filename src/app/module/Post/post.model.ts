@@ -49,10 +49,7 @@ const postSchema = new Schema<IPost>({
     type: Number,
     default: 0,
   },
-  upvotedBy: [{
-    type: Schema.Types.ObjectId,
-    ref: 'User',
-  }],
+  upvotedBy: [String],
   comments: [commentSchema],
   link: {
     type: String,
