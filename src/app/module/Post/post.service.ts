@@ -155,7 +155,39 @@ const commentOnPost = async (postId: string, userId: string, content: string): P
   return populatedPost;
 };  
 
+const updatePost = async (postId: string, postData: IPost, files: Express.Multer.File[]): Promise<IPost> => { 
+  console.log('postId', postId, 'postData', postData, 'files', files)
+  
+  const imageUrls = [];
+  if (files && files.length > 0) {
+    for (const file of files) {
+      const imageName = file.filename;
+      const result = await sendImageToCloudinary(imageName, file.path);
+      if (result && typeof result === "object" && "secure_url" in result) {
+        imageUrls.push(result.secure_url as string);
+      }
+    }
+  }
 
+  const updatedPostData = {
+    ...postData,
+    images: imageUrls
+  }
+
+  console.log('updatedPostData', updatedPostData)
+  
+  const post = await Post.findByIdAndUpdate(postId, updatedPostData, { new: true }); 
+
+
+  if (!post) {
+    throw new AppError(httpStatus.NOT_FOUND, "Post not found");
+  }
+  return post;
+
+  
+
+ 
+};
 
 export const PostServices = {
   getUpvote,
@@ -165,5 +197,6 @@ export const PostServices = {
   upvotePost,
   removeUpvote,
   deletePost,
-  commentOnPost
+  commentOnPost, 
+  updatePost
 };

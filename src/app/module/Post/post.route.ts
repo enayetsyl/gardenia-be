@@ -12,5 +12,6 @@ router.post("/upvote/:postId", PostControllers.upvotePost);
 router.post("/removeUpvote/:postId", PostControllers.removeUpvote);
 router.delete("/delete/:id", PostControllers.deletePost);
 router.post("/addComment/:postId", PostControllers.commentOnPost);
+router.put("/update/:id", upload.array('images', 5), PostControllers.updatePost);
 
 export const PostRoutes = router;

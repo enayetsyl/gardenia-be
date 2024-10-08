@@ -97,6 +97,20 @@ const commentOnPost = catchAsync(async (req, res) => {
   });
 });
 
+const updatePost = catchAsync(async (req, res) => {
+  const postId = req.params.id;
+  console.log('body', req.body)
+  const postData = req.body;
+  const files = req.files as Express.Multer.File[];
+  const post = await PostServices.updatePost(postId, postData, files);
+ 
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Post updated successfully",
+    data: post,
+  });
+});
 
 export const PostControllers = {
   getUpvote,
@@ -106,5 +120,6 @@ export const PostControllers = {
   upvotePost,
   removeUpvote,
   deletePost,
-  commentOnPost
+  commentOnPost,
+  updatePost
 }

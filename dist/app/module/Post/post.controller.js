@@ -99,6 +99,19 @@ const commentOnPost = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, 
         data: post,
     });
 }));
+const updatePost = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const postId = req.params.id;
+    console.log('body', req.body);
+    const postData = req.body;
+    const files = req.files;
+    const post = yield post_service_1.PostServices.updatePost(postId, postData, files);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: "Post updated successfully",
+        data: post,
+    });
+}));
 exports.PostControllers = {
     getUpvote,
     createPost,
@@ -107,5 +120,6 @@ exports.PostControllers = {
     upvotePost,
     removeUpvote,
     deletePost,
-    commentOnPost
+    commentOnPost,
+    updatePost
 };

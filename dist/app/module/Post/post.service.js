@@ -136,6 +136,26 @@ const commentOnPost = (postId, userId, content) => __awaiter(void 0, void 0, voi
     }
     return populatedPost;
 });
+const updatePost = (postId, postData, files) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log('postId', postId, 'postData', postData, 'files', files);
+    const imageUrls = [];
+    if (files && files.length > 0) {
+        for (const file of files) {
+            const imageName = file.filename;
+            const result = yield (0, sendImageToCloudinary_1.sendImageToCloudinary)(imageName, file.path);
+            if (result && typeof result === "object" && "secure_url" in result) {
+                imageUrls.push(result.secure_url);
+            }
+        }
+    }
+    const updatedPostData = Object.assign(Object.assign({}, postData), { images: imageUrls });
+    console.log('updatedPostData', updatedPostData);
+    const post = yield post_model_1.Post.findByIdAndUpdate(postId, updatedPostData, { new: true });
+    if (!post) {
+        throw new AppError_1.default(http_status_1.default.NOT_FOUND, "Post not found");
+    }
+    return post;
+});
 exports.PostServices = {
     getUpvote,
     createPost,
@@ -144,5 +164,6 @@ exports.PostServices = {
     upvotePost,
     removeUpvote,
     deletePost,
-    commentOnPost
+    commentOnPost,
+    updatePost
 };
