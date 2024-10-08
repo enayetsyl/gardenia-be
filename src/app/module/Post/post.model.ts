@@ -1,4 +1,4 @@
-import mongoose, { Schema, model } from 'mongoose';
+import  { Schema, model } from 'mongoose';
 import { IPost, IComment } from './post.interface';
 
 const commentSchema = new Schema<IComment>({

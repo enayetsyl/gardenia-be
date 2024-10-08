@@ -77,11 +77,35 @@ const removeUpvote = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, v
         data: post,
     });
 }));
+const deletePost = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const postId = req.params.id;
+    const post = yield post_service_1.PostServices.deletePost(postId);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: "Post deleted successfully",
+        data: post,
+    });
+}));
+const commentOnPost = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const postId = req.params.postId;
+    const userId = req.body.userId;
+    const comment = req.body.content;
+    const post = yield post_service_1.PostServices.commentOnPost(postId, userId, comment);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: "Comment added successfully",
+        data: post,
+    });
+}));
 exports.PostControllers = {
     getUpvote,
     createPost,
     getPost,
     getNewsFeed,
     upvotePost,
-    removeUpvote
+    removeUpvote,
+    deletePost,
+    commentOnPost
 };

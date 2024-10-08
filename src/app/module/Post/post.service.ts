@@ -1,10 +1,10 @@
 import { Post } from "./post.model";
-import { IPost } from "./post.interface";
+import { IComment, IPost } from "./post.interface";
 import { User } from "../User/user.model";
 import { sendImageToCloudinary } from "../../utils/sendImageToCloudinary";
 import AppError from "../../errors/AppError";
 import httpStatus from "http-status";
-import mongoose, { Types } from "mongoose";
+import mongoose from "mongoose";
 
 const getUpvote = async (userId: string): Promise<boolean> => {
   const posts = await Post.find({ userId: userId });
@@ -22,7 +22,6 @@ const createPost = async (
   files: Express.Multer.File[]
 ): Promise<IPost> => {
   // Check if user exists
-  console.log("post data", postData);
   const user = await User.findById(postData.userId);
   if (!user) {
     throw new AppError(httpStatus.NOT_FOUND, "User not found");
@@ -30,7 +29,6 @@ const createPost = async (
 
   // Handle image uploads
   const imageUrls = [];
-  console.log("user", user);
   if (files && files.length > 0) {
     for (const file of files) {
       const imageName = file.filename;
@@ -41,44 +39,53 @@ const createPost = async (
     }
   }
 
-  console.log("imageUrls", imageUrls);
   // Create new post
   const newPost = await Post.create({
     ...postData,
     images: imageUrls,
   });
-  console.log("newPost", newPost);
   return newPost;
 };
 
 const getPost = async (userId: string): Promise<IPost[]> => {
-  const posts = await Post.find({ userId: userId });
+  const posts = await Post.find({ userId: userId }).populate({
+    path: "userId",
+  }).populate({
+    path: "comments.userId",
+  });;
   return posts;
 };
 
 const getNewsFeed = async (): Promise<IPost[]> => {
-  const posts = await Post.find({}).populate("userId");
+  const posts = await Post.find({}).populate({
+    path: "userId",
+  }).populate({
+    path: "comments.userId",
+    
+  });
   return posts;
 };
 
 const upvotePost = async (postId: string, userId: string): Promise<IPost> => {
   const post = await Post.findById(postId);
-  console.log("post ", post);
   // Check if user has already upvoted the post
   if (!post) {
     throw new AppError(httpStatus.NOT_FOUND, "Post not found");
   }
 
-  // if (post.upvotedBy && !post.upvotedBy.some((id) => id === userId.toString())){
-  //   throw new AppError(
-  //     httpStatus.BAD_REQUEST,
-  //     "User has already upvoted this post"
-  //   );
-  // }
+  
   post.upvoteCount = (post.upvoteCount ?? 0) + 1;
   post.upvotedBy = [...(post.upvotedBy ?? []), userId];
   await post.save();
-  return post;
+  const populatedPost = await Post.findById(postId).populate({
+    path: 'comments.userId',
+  });
+
+  if (!populatedPost) {
+    throw new AppError(httpStatus.NOT_FOUND, "Post not found after saving comment");
+  }
+
+  return populatedPost;
 };
 
 const removeUpvote = async (postId: string, userId: string) => {
@@ -88,22 +95,67 @@ const removeUpvote = async (postId: string, userId: string) => {
     throw new AppError(httpStatus.NOT_FOUND, "Post not found");
   }
 
-  // if (post.upvotedBy && !post.upvotedBy.some((id) => id === userId.toString())) {
-  //   throw new AppError(
-  //     httpStatus.BAD_REQUEST,
-  //     "User has not upvoted this post"
-  //   );
-  // }
-
-  // Decrement upvote count and remove userId from upvotedBy array
+  
   post.upvoteCount = Math.max((post.upvoteCount ?? 1) - 1, 0); // Ensures upvote count doesn't go below 0
   if (post.upvotedBy) {
     post.upvotedBy = post.upvotedBy.filter(id => id !== userId.toString());
   }
 
   await post.save();
+  const populatedPost = await Post.findById(postId).populate({
+    path: 'comments.userId',
+  });
+
+  if (!populatedPost) {
+    throw new AppError(httpStatus.NOT_FOUND, "Post not found after saving comment");
+  }
+
+  return populatedPost;
+  
+};
+
+const deletePost = async (postId: string): Promise<IPost> => {
+  const post = await Post.findByIdAndDelete(postId);
+  if (!post) {
+    throw new Error('Post not found');
+  }
   return post;
 };
+
+
+const commentOnPost = async (postId: string, userId: string, content: string): Promise<IPost> => {
+  const post = await Post.findById(postId);
+  if (!post) {
+    throw new AppError(httpStatus.NOT_FOUND, "Post not found");
+  }
+  
+  // Convert postId and userId to ObjectId
+  const postObjectId = new mongoose.Types.ObjectId(postId);
+  const userObjectId = new mongoose.Types.ObjectId(userId);
+
+
+  const newComment: IComment = {
+    userId: userObjectId,  
+    postId: postObjectId,  
+    content,
+    createdAt: new Date(),
+    updatedAt: new Date()
+  };
+  
+  post.comments = [...(post.comments ?? []), newComment];
+  await post.save();
+  const populatedPost = await Post.findById(postId).populate({
+    path: 'comments.userId',
+  });
+
+  if (!populatedPost) {
+    throw new AppError(httpStatus.NOT_FOUND, "Post not found after saving comment");
+  }
+
+  return populatedPost;
+};  
+
+
 
 export const PostServices = {
   getUpvote,
@@ -112,4 +164,6 @@ export const PostServices = {
   getNewsFeed,
   upvotePost,
   removeUpvote,
+  deletePost,
+  commentOnPost
 };

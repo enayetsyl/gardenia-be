@@ -6,7 +6,7 @@ export type IPost = {
   images?: string[];
   category: string;
   isPremium?: boolean;
-  userId: mongoose.Schema.Types.ObjectId;
+  userId: mongoose.Types.ObjectId;
   upvoteCount?: number;
   upvotedBy?: string[];
   comments?: IComment[];
@@ -16,8 +16,8 @@ export type IPost = {
 }
 
 export type IComment = {
-  userId: mongoose.Schema.Types.ObjectId;
-  postId: mongoose.Schema.Types.ObjectId;
+  userId: mongoose.Types.ObjectId;
+  postId: mongoose.Types.ObjectId;
   content: string;
   createdAt: Date;
   updatedAt: Date;

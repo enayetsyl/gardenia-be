@@ -10,5 +10,7 @@ router.get("/getPosts/:id", PostControllers.getPost);
 router.get("/getNewsFeed", PostControllers.getNewsFeed);
 router.post("/upvote/:postId", PostControllers.upvotePost);
 router.post("/removeUpvote/:postId", PostControllers.removeUpvote);
+router.delete("/delete/:id", PostControllers.deletePost);
+router.post("/addComment/:postId", PostControllers.commentOnPost);
 
 export const PostRoutes = router;

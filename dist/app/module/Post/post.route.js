@@ -14,4 +14,6 @@ router.get("/getPosts/:id", post_controller_1.PostControllers.getPost);
 router.get("/getNewsFeed", post_controller_1.PostControllers.getNewsFeed);
 router.post("/upvote/:postId", post_controller_1.PostControllers.upvotePost);
 router.post("/removeUpvote/:postId", post_controller_1.PostControllers.removeUpvote);
+router.delete("/delete/:id", post_controller_1.PostControllers.deletePost);
+router.post("/addComment/:postId", post_controller_1.PostControllers.commentOnPost);
 exports.PostRoutes = router;

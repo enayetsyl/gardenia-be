@@ -72,7 +72,30 @@ const removeUpvote = catchAsync(async (req, res) => {
   });
 });
 
+const deletePost = catchAsync(async (req, res) => {
+  const postId = req.params.id;
+  const post = await PostServices.deletePost(postId);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Post deleted successfully",
+    data: post,
+  });
+});
 
+
+const commentOnPost = catchAsync(async (req, res) => {
+  const postId = req.params.postId;
+  const userId = req.body.userId;
+  const comment = req.body.content;
+  const post = await PostServices.commentOnPost(postId, userId, comment);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Comment added successfully",
+    data: post,
+  });
+});
 
 
 export const PostControllers = {
@@ -81,5 +104,7 @@ export const PostControllers = {
   getPost,
   getNewsFeed,
   upvotePost,
-  removeUpvote
+  removeUpvote,
+  deletePost,
+  commentOnPost
 }

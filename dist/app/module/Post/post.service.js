@@ -18,6 +18,7 @@ const user_model_1 = require("../User/user.model");
 const sendImageToCloudinary_1 = require("../../utils/sendImageToCloudinary");
 const AppError_1 = __importDefault(require("../../errors/AppError"));
 const http_status_1 = __importDefault(require("http-status"));
+const mongoose_1 = __importDefault(require("mongoose"));
 const getUpvote = (userId) => __awaiter(void 0, void 0, void 0, function* () {
     const posts = yield post_model_1.Post.find({ userId: userId });
     if (posts.length === 0) {
@@ -28,14 +29,12 @@ const getUpvote = (userId) => __awaiter(void 0, void 0, void 0, function* () {
 });
 const createPost = (postData, files) => __awaiter(void 0, void 0, void 0, function* () {
     // Check if user exists
-    console.log("post data", postData);
     const user = yield user_model_1.User.findById(postData.userId);
     if (!user) {
         throw new AppError_1.default(http_status_1.default.NOT_FOUND, "User not found");
     }
     // Handle image uploads
     const imageUrls = [];
-    console.log("user", user);
     if (files && files.length > 0) {
         for (const file of files) {
             const imageName = file.filename;
@@ -45,38 +44,44 @@ const createPost = (postData, files) => __awaiter(void 0, void 0, void 0, functi
             }
         }
     }
-    console.log("imageUrls", imageUrls);
     // Create new post
     const newPost = yield post_model_1.Post.create(Object.assign(Object.assign({}, postData), { images: imageUrls }));
-    console.log("newPost", newPost);
     return newPost;
 });
 const getPost = (userId) => __awaiter(void 0, void 0, void 0, function* () {
-    const posts = yield post_model_1.Post.find({ userId: userId });
+    const posts = yield post_model_1.Post.find({ userId: userId }).populate({
+        path: "userId",
+    }).populate({
+        path: "comments.userId",
+    });
+    ;
     return posts;
 });
 const getNewsFeed = () => __awaiter(void 0, void 0, void 0, function* () {
-    const posts = yield post_model_1.Post.find({}).populate("userId");
+    const posts = yield post_model_1.Post.find({}).populate({
+        path: "userId",
+    }).populate({
+        path: "comments.userId",
+    });
     return posts;
 });
 const upvotePost = (postId, userId) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, _b;
     const post = yield post_model_1.Post.findById(postId);
-    console.log("post ", post);
     // Check if user has already upvoted the post
     if (!post) {
         throw new AppError_1.default(http_status_1.default.NOT_FOUND, "Post not found");
     }
-    // if (post.upvotedBy && !post.upvotedBy.some((id) => id === userId.toString())){
-    //   throw new AppError(
-    //     httpStatus.BAD_REQUEST,
-    //     "User has already upvoted this post"
-    //   );
-    // }
     post.upvoteCount = ((_a = post.upvoteCount) !== null && _a !== void 0 ? _a : 0) + 1;
     post.upvotedBy = [...((_b = post.upvotedBy) !== null && _b !== void 0 ? _b : []), userId];
     yield post.save();
-    return post;
+    const populatedPost = yield post_model_1.Post.findById(postId).populate({
+        path: 'comments.userId',
+    });
+    if (!populatedPost) {
+        throw new AppError_1.default(http_status_1.default.NOT_FOUND, "Post not found after saving comment");
+    }
+    return populatedPost;
 });
 const removeUpvote = (postId, userId) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
@@ -85,19 +90,51 @@ const removeUpvote = (postId, userId) => __awaiter(void 0, void 0, void 0, funct
     if (!post) {
         throw new AppError_1.default(http_status_1.default.NOT_FOUND, "Post not found");
     }
-    // if (post.upvotedBy && !post.upvotedBy.some((id) => id === userId.toString())) {
-    //   throw new AppError(
-    //     httpStatus.BAD_REQUEST,
-    //     "User has not upvoted this post"
-    //   );
-    // }
-    // Decrement upvote count and remove userId from upvotedBy array
     post.upvoteCount = Math.max(((_a = post.upvoteCount) !== null && _a !== void 0 ? _a : 1) - 1, 0); // Ensures upvote count doesn't go below 0
     if (post.upvotedBy) {
         post.upvotedBy = post.upvotedBy.filter(id => id !== userId.toString());
     }
     yield post.save();
+    const populatedPost = yield post_model_1.Post.findById(postId).populate({
+        path: 'comments.userId',
+    });
+    if (!populatedPost) {
+        throw new AppError_1.default(http_status_1.default.NOT_FOUND, "Post not found after saving comment");
+    }
+    return populatedPost;
+});
+const deletePost = (postId) => __awaiter(void 0, void 0, void 0, function* () {
+    const post = yield post_model_1.Post.findByIdAndDelete(postId);
+    if (!post) {
+        throw new Error('Post not found');
+    }
     return post;
+});
+const commentOnPost = (postId, userId, content) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    const post = yield post_model_1.Post.findById(postId);
+    if (!post) {
+        throw new AppError_1.default(http_status_1.default.NOT_FOUND, "Post not found");
+    }
+    // Convert postId and userId to ObjectId
+    const postObjectId = new mongoose_1.default.Types.ObjectId(postId);
+    const userObjectId = new mongoose_1.default.Types.ObjectId(userId);
+    const newComment = {
+        userId: userObjectId,
+        postId: postObjectId,
+        content,
+        createdAt: new Date(),
+        updatedAt: new Date()
+    };
+    post.comments = [...((_a = post.comments) !== null && _a !== void 0 ? _a : []), newComment];
+    yield post.save();
+    const populatedPost = yield post_model_1.Post.findById(postId).populate({
+        path: 'comments.userId',
+    });
+    if (!populatedPost) {
+        throw new AppError_1.default(http_status_1.default.NOT_FOUND, "Post not found after saving comment");
+    }
+    return populatedPost;
 });
 exports.PostServices = {
     getUpvote,
@@ -106,4 +143,6 @@ exports.PostServices = {
     getNewsFeed,
     upvotePost,
     removeUpvote,
+    deletePost,
+    commentOnPost
 };
