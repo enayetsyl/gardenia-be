@@ -30,9 +30,7 @@ const getSingleUserFromDB = (id) => __awaiter(void 0, void 0, void 0, function* 
     return result;
 });
 const uploadUserImage = (id, file) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log('user id', id);
     const user = yield user_model_1.User.findById(id);
-    console.log('user', user);
     if (!user) {
         throw new AppError_1.default(http_status_1.default.NOT_FOUND, 'User not found');
     }
@@ -43,19 +41,15 @@ const uploadUserImage = (id, file) => __awaiter(void 0, void 0, void 0, function
     const imageName = `user_${id}_${Date.now()}`;
     // Upload image to Cloudinary
     const result = yield (0, sendImageToCloudinary_1.sendImageToCloudinary)(imageName, file.path);
-    console.log('result', result);
     // Update user with new image URL
     const updatedUser = yield user_model_1.User.findByIdAndUpdate(id, { userImage: result.secure_url }, { new: true });
     if (!updatedUser) {
         throw new AppError_1.default(http_status_1.default.NOT_FOUND, 'User not found after update');
     }
-    console.log('updatedUser', updatedUser);
     return updatedUser;
 });
 const uploadUserCoverImage = (id, file) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log('user id', id);
     const user = yield user_model_1.User.findById(id);
-    console.log('user', user);
     if (!user) {
         throw new AppError_1.default(http_status_1.default.NOT_FOUND, 'User not found');
     }
@@ -66,13 +60,11 @@ const uploadUserCoverImage = (id, file) => __awaiter(void 0, void 0, void 0, fun
     const imageName = `user_${id}_${Date.now()}`;
     // Upload image to Cloudinary
     const result = yield (0, sendImageToCloudinary_1.sendImageToCloudinary)(imageName, file.path);
-    console.log('result', result);
     // Update user cover image with new image URL
     const updatedUser = yield user_model_1.User.findByIdAndUpdate(id, { coverImage: result.secure_url }, { new: true });
     if (!updatedUser) {
         throw new AppError_1.default(http_status_1.default.NOT_FOUND, 'User not found after update');
     }
-    console.log('updatedUser', updatedUser);
     return updatedUser;
 });
 exports.UserServices = {

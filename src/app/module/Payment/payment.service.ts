@@ -9,7 +9,6 @@ const createPaymentIntent = async(price: string) => {
     currency: 'usd',
     payment_method_types: ['card'],
   });
-  console.log('payment intent', paymentIntent)
   return paymentIntent;
 }
 

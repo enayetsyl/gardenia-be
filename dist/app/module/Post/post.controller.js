@@ -18,7 +18,6 @@ const sendResponse_1 = __importDefault(require("../../utils/sendResponse"));
 const post_service_1 = require("./post.service");
 const http_status_1 = __importDefault(require("http-status"));
 const getUpvote = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log('user id in getUpvote', req.params.id);
     const upvote = yield post_service_1.PostServices.getUpvote(req.params.id);
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,

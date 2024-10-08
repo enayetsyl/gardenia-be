@@ -23,7 +23,6 @@ const createPaymentIntent = (price) => __awaiter(void 0, void 0, void 0, functio
         currency: 'usd',
         payment_method_types: ['card'],
     });
-    console.log('payment intent', paymentIntent);
     return paymentIntent;
 });
 exports.PaymentServices = {

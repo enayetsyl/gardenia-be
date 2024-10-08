@@ -23,10 +23,8 @@ const getSingleUserFromDB = async(id: string) => {
 
 
 const uploadUserImage = async(id: string, file: Express.Multer.File) => {
-  console.log('user id', id)
 
   const user = await User.findById(id);
-  console.log('user', user)
   if (!user) {
     throw new AppError(httpStatus.NOT_FOUND, 'User not found');
   }
@@ -40,7 +38,6 @@ const uploadUserImage = async(id: string, file: Express.Multer.File) => {
 
   // Upload image to Cloudinary
   const result = await sendImageToCloudinary(imageName, file.path);
-  console.log('result', result)
 
   // Update user with new image URL
   const updatedUser = await User.findByIdAndUpdate(
@@ -52,15 +49,12 @@ const uploadUserImage = async(id: string, file: Express.Multer.File) => {
   if (!updatedUser) {
     throw new AppError(httpStatus.NOT_FOUND, 'User not found after update');
   }
-  console.log('updatedUser', updatedUser)
   return updatedUser;
 };
 
 const uploadUserCoverImage = async(id: string, file: Express.Multer.File) => {
-  console.log('user id', id)
 
   const user = await User.findById(id);
-  console.log('user', user)
   if (!user) {
     throw new AppError(httpStatus.NOT_FOUND, 'User not found');
   }
@@ -74,7 +68,6 @@ const uploadUserCoverImage = async(id: string, file: Express.Multer.File) => {
 
   // Upload image to Cloudinary
   const result = await sendImageToCloudinary(imageName, file.path);
-  console.log('result', result)   
 
   // Update user cover image with new image URL
   const updatedUser = await User.findByIdAndUpdate(
@@ -86,7 +79,6 @@ const uploadUserCoverImage = async(id: string, file: Express.Multer.File) => {
   if (!updatedUser) {
     throw new AppError(httpStatus.NOT_FOUND, 'User not found after update');
   }
-  console.log('updatedUser', updatedUser)
   return updatedUser;
 }
 

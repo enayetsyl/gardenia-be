@@ -30,7 +30,6 @@ const catchAsync_1 = __importDefault(require("../../utils/catchAsync"));
 const sendResponse_1 = __importDefault(require("../../utils/sendResponse"));
 const auth_service_1 = require("./auth.service");
 const registerUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log('register request received', req.body);
     const result = yield auth_service_1.AuthServices.registerUser(req.body);
     const { accessToken, refreshToken } = result;
     res.cookie("refreshToken", refreshToken, {
@@ -87,7 +86,6 @@ const refreshToken = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, v
     });
 }));
 const forgetPassword = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log('forgot password request received', req.body);
     const userEmail = req.body.email;
     const result = yield auth_service_1.AuthServices.forgetPassword(userEmail);
     (0, sendResponse_1.default)(res, {

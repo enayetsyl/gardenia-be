@@ -35,12 +35,8 @@ const registerUser = (payload) => __awaiter(void 0, void 0, void 0, function* ()
         name: newUser === null || newUser === void 0 ? void 0 : newUser.name,
         email: newUser === null || newUser === void 0 ? void 0 : newUser.email,
     };
-    console.log('jwtPayload', jwtPayload);
     const accessToken = (0, tokenGenerateFunction_1.createToken)(jwtPayload, config_1.default.jwt_access_secret, config_1.default.JWT_EXPIRES_IN);
-    console.log('jwt access secret', config_1.default.jwt_access_secret);
-    console.log('accessToken', accessToken);
     const refreshToken = (0, tokenGenerateFunction_1.createToken)(jwtPayload, config_1.default.JWT_REFRESH_SECRET_KEY, config_1.default.JWT_REFRESH_EXPIRES_IN);
-    console.log('refreshToken', refreshToken);
     return {
         accessToken,
         refreshToken,
@@ -49,7 +45,6 @@ const registerUser = (payload) => __awaiter(void 0, void 0, void 0, function* ()
 const loginUser = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, _b;
     const user = yield user_model_1.User.isUserExistByEmail(payload === null || payload === void 0 ? void 0 : payload.email);
-    console.log('user in service', user);
     if (!user) {
         throw new AppError_1.default(http_status_1.default.NOT_FOUND, "User does not exist");
     }
@@ -89,7 +84,6 @@ const forgetPassword = (userEmail) => __awaiter(void 0, void 0, void 0, function
     (0, sendEmail_1.sendEmail)(user.email, resetUILink);
 });
 const resetPassword = (payload) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log('id, token, password', payload);
     const user = yield user_model_1.User.isUserExistsByCustomId(payload === null || payload === void 0 ? void 0 : payload.id);
     if (!user) {
         throw new AppError_1.default(http_status_1.default.NOT_FOUND, "User does not exist");
@@ -99,7 +93,6 @@ const resetPassword = (payload) => __awaiter(void 0, void 0, void 0, function* (
         throw new AppError_1.default(http_status_1.default.FORBIDDEN, "User does not exist");
     }
     const newHashedPassword = yield bcrypt_1.default.hash(payload === null || payload === void 0 ? void 0 : payload.password, Number(config_1.default.bcrypt_salt_rounds));
-    console.log('user, decoded, hashed password', user, decoded, newHashedPassword);
     yield user_model_1.User.findOneAndUpdate({
         _id: decoded === null || decoded === void 0 ? void 0 : decoded.userId,
         role: decoded === null || decoded === void 0 ? void 0 : decoded.role

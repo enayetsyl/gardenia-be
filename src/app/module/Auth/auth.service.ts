@@ -28,14 +28,10 @@ const registerUser = async (payload: Partial<TUser>) =>{
         name: newUser?.name,
         email: newUser?.email,
     }
-    console.log('jwtPayload', jwtPayload)
     const accessToken = createToken(jwtPayload, config.jwt_access_secret as string, config.JWT_EXPIRES_IN as string)
-    console.log('jwt access secret', config.jwt_access_secret)
-    console.log('accessToken', accessToken)
 
     const refreshToken = createToken(jwtPayload, config.JWT_REFRESH_SECRET_KEY as string, config.JWT_REFRESH_EXPIRES_IN as string)
 
-    console.log('refreshToken', refreshToken)
 
     return {
         accessToken,
@@ -47,7 +43,6 @@ const registerUser = async (payload: Partial<TUser>) =>{
 const loginUser = async (payload: Partial<TUser>) =>{
     const user = await User.isUserExistByEmail(payload?.email as string)
 
-    console.log('user in service', user)
 
     if(!user){
         throw new AppError(httpStatus.NOT_FOUND, "User does not exist")
@@ -109,7 +104,6 @@ const forgetPassword = async(userEmail: string) => {
 
 
 const resetPassword = async(payload:{ id: string; token: string; password: string } ) => {
-  console.log('id, token, password', payload)
   const user = await User.isUserExistsByCustomId(payload?.id)
 
    if(!user){
@@ -124,7 +118,6 @@ const resetPassword = async(payload:{ id: string; token: string; password: strin
 
   const newHashedPassword = await bcrypt.hash(payload?.password, Number(config.bcrypt_salt_rounds))
 
-  console.log('user, decoded, hashed password', user, decoded, newHashedPassword)
   
   await User.findOneAndUpdate({
     _id:decoded?.userId,

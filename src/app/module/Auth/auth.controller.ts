@@ -7,7 +7,6 @@ import AppError from "../../errors/AppError";
 
 
 const registerUser = catchAsync(async (req, res) => {
-  console.log('register request received',req.body)
     const result = await AuthServices.registerUser(req.body);
     const { accessToken, refreshToken } = result;
     
@@ -75,7 +74,6 @@ const refreshToken = catchAsync(async (req, res) => {
 })
 
 const forgetPassword = catchAsync(async (req, res) => {
-  console.log('forgot password request received', req.body)
   const userEmail = req.body.email;
   const result = await AuthServices.forgetPassword(userEmail);
 
