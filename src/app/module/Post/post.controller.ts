@@ -14,7 +14,32 @@ const getUpvote = catchAsync(async (req, res) => {
   });
 });
 
+const createPost = catchAsync(async (req, res) => {
+  const postData = req.body;
+  const files = req.files as Express.Multer.File[];
+  
+  const post = await PostServices.createPost(postData, files);
+  
+  sendResponse(res, {
+    statusCode: httpStatus.CREATED,
+    success: true,
+    message: "Post created successfully",
+    data: post,
+  });
+});
+
+const getPost = catchAsync(async (req, res) => {
+  const posts = await PostServices.getPost(req.params.id);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Posts fetched successfully",
+    data: posts,
+  });
+});
 
 export const PostControllers = {
-  getUpvote
+  getUpvote,
+  createPost,
+  getPost
 }

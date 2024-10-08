@@ -26,6 +26,28 @@ const getUpvote = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void
         data: upvote,
     });
 }));
+const createPost = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const postData = req.body;
+    const files = req.files;
+    const post = yield post_service_1.PostServices.createPost(postData, files);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.CREATED,
+        success: true,
+        message: "Post created successfully",
+        data: post,
+    });
+}));
+const getPost = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const posts = yield post_service_1.PostServices.getPost(req.params.id);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: "Posts fetched successfully",
+        data: posts,
+    });
+}));
 exports.PostControllers = {
-    getUpvote
+    getUpvote,
+    createPost,
+    getPost
 };

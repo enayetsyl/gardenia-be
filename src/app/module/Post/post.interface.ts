@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 
-
 export type IPost = {
   title?: string;
   content?: string;
@@ -8,8 +7,18 @@ export type IPost = {
   category: string;
   isPremium?: boolean;
   userId: mongoose.Schema.Types.ObjectId;
-  upvotes?: { type: Number, default: 0 },
+  upvoteCount?: number;
+  upvotedBy?: mongoose.Schema.Types.ObjectId[];
+  comments?: IComment[];
   link?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+export type IComment = {
+  userId: mongoose.Schema.Types.ObjectId;
+  postId: mongoose.Schema.Types.ObjectId;
+  content: string;
   createdAt: Date;
   updatedAt: Date;
 }

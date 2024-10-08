@@ -1,5 +1,24 @@
 import mongoose, { Schema, model } from 'mongoose';
-import { IPost } from './post.interface';
+import { IPost, IComment } from './post.interface';
+
+const commentSchema = new Schema<IComment>({
+  userId: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  },
+  postId: {
+    type: Schema.Types.ObjectId,
+    ref: 'Post',
+    required: true,
+  },
+  content: {
+    type: String,
+    required: true,
+  },
+}, {
+  timestamps: true,
+});
 
 const postSchema = new Schema<IPost>({
   title: {
@@ -22,19 +41,24 @@ const postSchema = new Schema<IPost>({
     default: false,
   },
   userId: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     ref: 'User',
     required: true,
   },
-  upvotes: {
+  upvoteCount: {
     type: Number,
     default: 0,
   },
+  upvotedBy: [{
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+  }],
+  comments: [commentSchema],
   link: {
     type: String,
   },
 }, {
-  timestamps: true, // Automatically adds createdAt and updatedAt fields
+  timestamps: true,
 });
 
 // Creating the Post model

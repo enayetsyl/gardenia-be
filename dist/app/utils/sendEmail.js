@@ -35,6 +35,7 @@ const sendEmail = (to, html) => __awaiter(void 0, void 0, void 0, function* () {
             text: '', // Plain text body (optional)
             html, // HTML body content
         });
+        console.log('Email sent successfully');
     }
     catch (error) {
         console.error('Error sending email:', error);
