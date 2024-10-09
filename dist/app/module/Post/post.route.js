@@ -17,4 +17,5 @@ router.post("/removeUpvote/:postId", post_controller_1.PostControllers.removeUpv
 router.delete("/delete/:id", post_controller_1.PostControllers.deletePost);
 router.post("/addComment/:postId", post_controller_1.PostControllers.commentOnPost);
 router.put("/update/:id", sendImageToCloudinary_1.upload.array('images', 5), post_controller_1.PostControllers.updatePost);
+router.delete("/delete/:postId/comments/:commentId", post_controller_1.PostControllers.deleteComment);
 exports.PostRoutes = router;

@@ -187,6 +187,24 @@ const updatePost = async (postId: string, postData: IPost, files: Express.Multer
  
 };
 
+
+const deleteComment = async (postId: string, commentId: string): Promise<IPost> => {
+  // console.log('postId', postId, 'commentId', commentId)
+  const post = await Post.findById(postId);
+  // console.log('post', post)
+  if (!post) {
+    throw new AppError(httpStatus.NOT_FOUND, "Post not found");
+  }
+  
+  if (post.comments) {
+    post.comments = post.comments.filter(comment => comment?._id?.toString() !== commentId);
+  }
+
+  console.log('Remaining comments:', post.comments);
+  await post.save();
+  return post;
+};
+
 export const PostServices = {
   getUpvote,
   createPost,
@@ -196,5 +214,6 @@ export const PostServices = {
   removeUpvote,
   deletePost,
   commentOnPost, 
-  updatePost
+  updatePost,
+  deleteComment
 };

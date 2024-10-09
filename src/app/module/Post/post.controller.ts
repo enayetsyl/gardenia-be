@@ -111,6 +111,19 @@ const updatePost = catchAsync(async (req, res) => {
   });
 });
 
+const deleteComment = catchAsync(async (req, res) => {
+  const postId = req.params.postId;
+  const commentId = req.params.commentId;
+  console.log('postId', postId, 'commentId', commentId)
+  const post = await PostServices.deleteComment(postId, commentId);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Comment deleted successfully",
+    data: post, 
+  });
+});
+
 export const PostControllers = {
   getUpvote,
   createPost,
@@ -120,5 +133,6 @@ export const PostControllers = {
   removeUpvote,
   deletePost,
   commentOnPost,
-  updatePost
+  updatePost,
+  deleteComment
 }

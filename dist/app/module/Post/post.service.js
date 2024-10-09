@@ -154,6 +154,20 @@ const updatePost = (postId, postData, files) => __awaiter(void 0, void 0, void 0
     }
     return post;
 });
+const deleteComment = (postId, commentId) => __awaiter(void 0, void 0, void 0, function* () {
+    // console.log('postId', postId, 'commentId', commentId)
+    const post = yield post_model_1.Post.findById(postId);
+    // console.log('post', post)
+    if (!post) {
+        throw new AppError_1.default(http_status_1.default.NOT_FOUND, "Post not found");
+    }
+    if (post.comments) {
+        post.comments = post.comments.filter(comment => { var _a; return ((_a = comment === null || comment === void 0 ? void 0 : comment._id) === null || _a === void 0 ? void 0 : _a.toString()) !== commentId; });
+    }
+    console.log('Remaining comments:', post.comments);
+    yield post.save();
+    return post;
+});
 exports.PostServices = {
     getUpvote,
     createPost,
@@ -163,5 +177,6 @@ exports.PostServices = {
     removeUpvote,
     deletePost,
     commentOnPost,
-    updatePost
+    updatePost,
+    deleteComment
 };
