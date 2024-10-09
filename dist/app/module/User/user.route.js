@@ -22,4 +22,5 @@ router.post('/upload-cover-image/:id',
 sendImageToCloudinary_1.upload.single('image'), user_controller_1.UserControllers.uploadUserCoverImage);
 router.get('/', user_controller_1.UserControllers.getAllUsers);
 router.get('/:id', user_controller_1.UserControllers.getSingleUser);
+router.patch('/verify-account', user_controller_1.UserControllers.verifyAccount);
 exports.UserRoutes = router;

@@ -29,9 +29,9 @@ router.post('/upload-cover-image/:id',
   upload.single('image'),
   UserControllers.uploadUserCoverImage
 );
-
 router.get('/', UserControllers.getAllUsers);
 router.get('/:id', UserControllers.getSingleUser);
+router.patch('/verify-account', UserControllers.verifyAccount);
 
 
 

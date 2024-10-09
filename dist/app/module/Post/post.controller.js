@@ -101,7 +101,6 @@ const commentOnPost = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, 
 }));
 const updatePost = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const postId = req.params.id;
-    console.log('body', req.body);
     const postData = req.body;
     const files = req.files;
     const post = yield post_service_1.PostServices.updatePost(postId, postData, files);

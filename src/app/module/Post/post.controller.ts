@@ -99,7 +99,6 @@ const commentOnPost = catchAsync(async (req, res) => {
 
 const updatePost = catchAsync(async (req, res) => {
   const postId = req.params.id;
-  console.log('body', req.body)
   const postData = req.body;
   const files = req.files as Express.Multer.File[];
   const post = await PostServices.updatePost(postId, postData, files);

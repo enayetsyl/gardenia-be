@@ -62,6 +62,16 @@ const uploadUserCoverImage = (0, catchAsync_1.default)((req, res) => __awaiter(v
         data: user,
     });
 }));
+const verifyAccount = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { userId } = req.body;
+    const user = yield user_service_1.UserServices.verifyAccount(userId);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: 'Account verified successfully!',
+        data: user,
+    });
+}));
 exports.UserControllers = {
-    userRegister, getAllUsers, getSingleUser, uploadUserImage, uploadUserCoverImage
+    userRegister, getAllUsers, getSingleUser, uploadUserImage, uploadUserCoverImage, verifyAccount
 };

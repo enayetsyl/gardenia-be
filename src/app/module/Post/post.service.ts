@@ -156,7 +156,6 @@ const commentOnPost = async (postId: string, userId: string, content: string): P
 };  
 
 const updatePost = async (postId: string, postData: IPost, files: Express.Multer.File[]): Promise<IPost> => { 
-  console.log('postId', postId, 'postData', postData, 'files', files)
   
   const imageUrls = [];
   if (files && files.length > 0) {
@@ -174,7 +173,6 @@ const updatePost = async (postId: string, postData: IPost, files: Express.Multer
     images: imageUrls
   }
 
-  console.log('updatedPostData', updatedPostData)
   
   const post = await Post.findByIdAndUpdate(postId, updatedPostData, { new: true }); 
 

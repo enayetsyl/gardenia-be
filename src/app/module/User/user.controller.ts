@@ -55,6 +55,19 @@ const uploadUserCoverImage = catchAsync(async(req, res) => {
   });
 })
 
+const verifyAccount = catchAsync(async(req, res) => {
+  const { userId } = req.body;
+  const user = await UserServices.verifyAccount(userId);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Account verified successfully!',
+    data: user,
+  });
+})
+
+
+
 export const UserControllers = {
-  userRegister, getAllUsers, getSingleUser, uploadUserImage, uploadUserCoverImage
+  userRegister, getAllUsers, getSingleUser, uploadUserImage, uploadUserCoverImage, verifyAccount
  };

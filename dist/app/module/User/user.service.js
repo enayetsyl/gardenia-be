@@ -23,8 +23,7 @@ const createUser = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield user_model_1.User.create(payload);
     return result;
 });
-const getAllUsersFromDB = (query) => __awaiter(void 0, void 0, void 0, function* () {
-});
+const getAllUsersFromDB = (query) => __awaiter(void 0, void 0, void 0, function* () { });
 const getSingleUserFromDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield user_model_1.User.findById(id);
     return result;
@@ -32,10 +31,10 @@ const getSingleUserFromDB = (id) => __awaiter(void 0, void 0, void 0, function* 
 const uploadUserImage = (id, file) => __awaiter(void 0, void 0, void 0, function* () {
     const user = yield user_model_1.User.findById(id);
     if (!user) {
-        throw new AppError_1.default(http_status_1.default.NOT_FOUND, 'User not found');
+        throw new AppError_1.default(http_status_1.default.NOT_FOUND, "User not found");
     }
     if (!file) {
-        throw new AppError_1.default(http_status_1.default.BAD_REQUEST, 'No image file provided');
+        throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "No image file provided");
     }
     // Generate a unique image name
     const imageName = `user_${id}_${Date.now()}`;
@@ -44,17 +43,17 @@ const uploadUserImage = (id, file) => __awaiter(void 0, void 0, void 0, function
     // Update user with new image URL
     const updatedUser = yield user_model_1.User.findByIdAndUpdate(id, { userImage: result.secure_url }, { new: true });
     if (!updatedUser) {
-        throw new AppError_1.default(http_status_1.default.NOT_FOUND, 'User not found after update');
+        throw new AppError_1.default(http_status_1.default.NOT_FOUND, "User not found after update");
     }
     return updatedUser;
 });
 const uploadUserCoverImage = (id, file) => __awaiter(void 0, void 0, void 0, function* () {
     const user = yield user_model_1.User.findById(id);
     if (!user) {
-        throw new AppError_1.default(http_status_1.default.NOT_FOUND, 'User not found');
+        throw new AppError_1.default(http_status_1.default.NOT_FOUND, "User not found");
     }
     if (!file) {
-        throw new AppError_1.default(http_status_1.default.BAD_REQUEST, 'No image file provided');
+        throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "No image file provided");
     }
     // Generate a unique image name
     const imageName = `user_${id}_${Date.now()}`;
@@ -63,10 +62,19 @@ const uploadUserCoverImage = (id, file) => __awaiter(void 0, void 0, void 0, fun
     // Update user cover image with new image URL
     const updatedUser = yield user_model_1.User.findByIdAndUpdate(id, { coverImage: result.secure_url }, { new: true });
     if (!updatedUser) {
-        throw new AppError_1.default(http_status_1.default.NOT_FOUND, 'User not found after update');
+        throw new AppError_1.default(http_status_1.default.NOT_FOUND, "User not found after update");
     }
     return updatedUser;
 });
+const verifyAccount = (userId) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield user_model_1.User.findByIdAndUpdate(userId, { isVerified: true }, { new: true });
+    return result;
+});
 exports.UserServices = {
-    getSingleUserFromDB, getAllUsersFromDB, createUser, uploadUserImage, uploadUserCoverImage
+    getSingleUserFromDB,
+    getAllUsersFromDB,
+    createUser,
+    uploadUserImage,
+    uploadUserCoverImage,
+    verifyAccount,
 };

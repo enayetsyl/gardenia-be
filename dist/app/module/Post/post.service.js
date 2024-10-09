@@ -137,7 +137,6 @@ const commentOnPost = (postId, userId, content) => __awaiter(void 0, void 0, voi
     return populatedPost;
 });
 const updatePost = (postId, postData, files) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log('postId', postId, 'postData', postData, 'files', files);
     const imageUrls = [];
     if (files && files.length > 0) {
         for (const file of files) {
@@ -149,7 +148,6 @@ const updatePost = (postId, postData, files) => __awaiter(void 0, void 0, void 0
         }
     }
     const updatedPostData = Object.assign(Object.assign({}, postData), { images: imageUrls });
-    console.log('updatedPostData', updatedPostData);
     const post = yield post_model_1.Post.findByIdAndUpdate(postId, updatedPostData, { new: true });
     if (!post) {
         throw new AppError_1.default(http_status_1.default.NOT_FOUND, "Post not found");
