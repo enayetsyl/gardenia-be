@@ -168,6 +168,20 @@ const deleteComment = (postId, commentId) => __awaiter(void 0, void 0, void 0, f
     yield post.save();
     return post;
 });
+const updateComment = (postId, commentId, content) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    const post = yield post_model_1.Post.findById(postId);
+    if (!post) {
+        throw new AppError_1.default(http_status_1.default.NOT_FOUND, "Post not found");
+    }
+    const comment = (_a = post.comments) === null || _a === void 0 ? void 0 : _a.find(comment => { var _a; return ((_a = comment === null || comment === void 0 ? void 0 : comment._id) === null || _a === void 0 ? void 0 : _a.toString()) === commentId; });
+    if (!comment) {
+        throw new AppError_1.default(http_status_1.default.NOT_FOUND, "Comment not found");
+    }
+    comment.content = content;
+    yield post.save();
+    return post;
+});
 exports.PostServices = {
     getUpvote,
     createPost,
@@ -178,5 +192,6 @@ exports.PostServices = {
     deletePost,
     commentOnPost,
     updatePost,
-    deleteComment
+    deleteComment,
+    updateComment
 };

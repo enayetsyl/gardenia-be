@@ -123,6 +123,17 @@ const deleteComment = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, 
         data: post,
     });
 }));
+const updateComment = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const postId = req.params.postId;
+    const { content, commentId } = req.body;
+    const post = yield post_service_1.PostServices.updateComment(postId, commentId, content);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: "Comment updated successfully",
+        data: post,
+    });
+}));
 exports.PostControllers = {
     getUpvote,
     createPost,
@@ -133,5 +144,5 @@ exports.PostControllers = {
     deletePost,
     commentOnPost,
     updatePost,
-    deleteComment
+    deleteComment, updateComment
 };

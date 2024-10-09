@@ -205,6 +205,23 @@ const deleteComment = async (postId: string, commentId: string): Promise<IPost> 
   return post;
 };
 
+
+const updateComment = async (postId: string, commentId: string, content: string): Promise<IPost> => {
+  const post = await Post.findById(postId);
+  if (!post) {
+    throw new AppError(httpStatus.NOT_FOUND, "Post not found");
+  }
+  
+  const comment = post.comments?.find(comment => comment?._id?.toString() === commentId);
+  if (!comment) {
+    throw new AppError(httpStatus.NOT_FOUND, "Comment not found");  
+  }
+
+  comment.content = content;
+  await post.save();
+  return post;
+};
+
 export const PostServices = {
   getUpvote,
   createPost,
@@ -215,5 +232,6 @@ export const PostServices = {
   deletePost,
   commentOnPost, 
   updatePost,
-  deleteComment
+  deleteComment,
+  updateComment
 };

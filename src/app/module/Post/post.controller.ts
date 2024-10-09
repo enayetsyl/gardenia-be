@@ -124,6 +124,19 @@ const deleteComment = catchAsync(async (req, res) => {
   });
 });
 
+
+const updateComment = catchAsync(async (req, res) => {
+  const postId = req.params.postId;
+  const {content, commentId} = req.body
+  const post = await PostServices.updateComment(postId, commentId, content);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Comment updated successfully",  
+    data: post,
+  });
+});
+
 export const PostControllers = {
   getUpvote,
   createPost,
@@ -134,5 +147,5 @@ export const PostControllers = {
   deletePost,
   commentOnPost,
   updatePost,
-  deleteComment
+  deleteComment, updateComment
 }
