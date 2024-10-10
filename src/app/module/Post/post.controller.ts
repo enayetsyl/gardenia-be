@@ -3,7 +3,6 @@ import sendResponse from "../../utils/sendResponse";
 import { PostServices } from "./post.service";
 import httpStatus from "http-status";
 
-
 const getUpvote = catchAsync(async (req, res) => {
   const upvote = await PostServices.getUpvote(req.params.id);
   sendResponse(res, {
@@ -17,9 +16,9 @@ const getUpvote = catchAsync(async (req, res) => {
 const createPost = catchAsync(async (req, res) => {
   const postData = req.body;
   const files = req.files as Express.Multer.File[];
-  
+
   const post = await PostServices.createPost(postData, files);
-  
+
   sendResponse(res, {
     statusCode: httpStatus.CREATED,
     success: true,
@@ -60,8 +59,6 @@ const upvotePost = catchAsync(async (req, res) => {
   });
 });
 
-
-
 const removeUpvote = catchAsync(async (req, res) => {
   const postId = req.params.postId;
   const userId = req.body.userId;
@@ -77,8 +74,8 @@ const removeUpvote = catchAsync(async (req, res) => {
 const addFavorite = catchAsync(async (req, res) => {
   const postId = req.params.postId;
   const userId = req.body.userId;
-  console.log('postId', postId);
-  console.log('userId', userId);
+  console.log("postId", postId);
+  console.log("userId", userId);
   const post = await PostServices.addFavorite(postId, userId);
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -100,7 +97,6 @@ const removeFavorite = catchAsync(async (req, res) => {
   });
 });
 
-
 const deletePost = catchAsync(async (req, res) => {
   const postId = req.params.id;
   const post = await PostServices.deletePost(postId);
@@ -111,7 +107,6 @@ const deletePost = catchAsync(async (req, res) => {
     data: post,
   });
 });
-
 
 const commentOnPost = catchAsync(async (req, res) => {
   const postId = req.params.postId;
@@ -131,7 +126,7 @@ const updatePost = catchAsync(async (req, res) => {
   const postData = req.body;
   const files = req.files as Express.Multer.File[];
   const post = await PostServices.updatePost(postId, postData, files);
- 
+
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -148,19 +143,29 @@ const deleteComment = catchAsync(async (req, res) => {
     statusCode: httpStatus.OK,
     success: true,
     message: "Comment deleted successfully",
-    data: post, 
+    data: post,
   });
 });
 
-
 const updateComment = catchAsync(async (req, res) => {
   const postId = req.params.postId;
-  const {content, commentId} = req.body
+  const { content, commentId } = req.body;
   const post = await PostServices.updateComment(postId, commentId, content);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "Comment updated successfully",  
+    message: "Comment updated successfully",
+    data: post,
+  });
+});
+
+const getSinglePost = catchAsync(async (req, res) => {
+  const post = await PostServices.getSinglePost(req.params.id);
+  
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Post fetched successfully",
     data: post,
   });
 });
@@ -175,5 +180,9 @@ export const PostControllers = {
   deletePost,
   commentOnPost,
   updatePost,
-  deleteComment, updateComment, addFavorite, removeFavorite
-}
+  deleteComment,
+  updateComment,
+  addFavorite,
+  removeFavorite,
+  getSinglePost,
+};

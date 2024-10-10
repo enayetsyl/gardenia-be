@@ -77,6 +77,8 @@ const upvotePost = (postId, userId) => __awaiter(void 0, void 0, void 0, functio
     yield post.save();
     const populatedPost = yield post_model_1.Post.findById(postId).populate({
         path: 'comments.userId',
+    }).populate({
+        path: 'userId',
     });
     if (!populatedPost) {
         throw new AppError_1.default(http_status_1.default.NOT_FOUND, "Post not found after saving comment");
@@ -100,6 +102,8 @@ const addFavorite = (postId, userId) => __awaiter(void 0, void 0, void 0, functi
     yield user.save();
     const populatedPost = yield post_model_1.Post.findById(postId).populate({
         path: 'comments.userId',
+    }).populate({
+        path: 'userId',
     });
     if (!populatedPost) {
         throw new AppError_1.default(http_status_1.default.NOT_FOUND, "Post not found after saving comment");
@@ -125,6 +129,8 @@ const removeFavorite = (postId, userId) => __awaiter(void 0, void 0, void 0, fun
     yield user.save();
     const populatedPost = yield post_model_1.Post.findById(postId).populate({
         path: 'comments.userId',
+    }).populate({
+        path: 'userId',
     });
     if (!populatedPost) {
         throw new AppError_1.default(http_status_1.default.NOT_FOUND, "Post not found after saving comment");
@@ -145,6 +151,8 @@ const removeUpvote = (postId, userId) => __awaiter(void 0, void 0, void 0, funct
     yield post.save();
     const populatedPost = yield post_model_1.Post.findById(postId).populate({
         path: 'comments.userId',
+    }).populate({
+        path: 'userId',
     });
     if (!populatedPost) {
         throw new AppError_1.default(http_status_1.default.NOT_FOUND, "Post not found after saving comment");
@@ -178,6 +186,8 @@ const commentOnPost = (postId, userId, content) => __awaiter(void 0, void 0, voi
     yield post.save();
     const populatedPost = yield post_model_1.Post.findById(postId).populate({
         path: 'comments.userId',
+    }).populate({
+        path: 'userId',
     });
     if (!populatedPost) {
         throw new AppError_1.default(http_status_1.default.NOT_FOUND, "Post not found after saving comment");
@@ -227,6 +237,17 @@ const updateComment = (postId, commentId, content) => __awaiter(void 0, void 0, 
     yield post.save();
     return post;
 });
+const getSinglePost = (postId) => __awaiter(void 0, void 0, void 0, function* () {
+    const post = yield post_model_1.Post.findById(postId).populate({
+        path: 'comments.userId',
+    }).populate({
+        path: 'userId',
+    });
+    if (!post) {
+        throw new AppError_1.default(http_status_1.default.NOT_FOUND, "Post not found");
+    }
+    return post;
+});
 exports.PostServices = {
     getUpvote,
     createPost,
@@ -240,5 +261,6 @@ exports.PostServices = {
     deleteComment,
     updateComment,
     addFavorite,
-    removeFavorite
+    removeFavorite,
+    getSinglePost
 };

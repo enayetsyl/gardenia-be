@@ -80,8 +80,8 @@ const removeUpvote = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, v
 const addFavorite = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const postId = req.params.postId;
     const userId = req.body.userId;
-    console.log('postId', postId);
-    console.log('userId', userId);
+    console.log("postId", postId);
+    console.log("userId", userId);
     const post = yield post_service_1.PostServices.addFavorite(postId, userId);
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,
@@ -157,6 +157,15 @@ const updateComment = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, 
         data: post,
     });
 }));
+const getSinglePost = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const post = yield post_service_1.PostServices.getSinglePost(req.params.id);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: "Post fetched successfully",
+        data: post,
+    });
+}));
 exports.PostControllers = {
     getUpvote,
     createPost,
@@ -167,5 +176,9 @@ exports.PostControllers = {
     deletePost,
     commentOnPost,
     updatePost,
-    deleteComment, updateComment, addFavorite, removeFavorite
+    deleteComment,
+    updateComment,
+    addFavorite,
+    removeFavorite,
+    getSinglePost,
 };

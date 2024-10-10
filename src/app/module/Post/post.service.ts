@@ -79,6 +79,8 @@ const upvotePost = async (postId: string, userId: string): Promise<IPost> => {
   await post.save();
   const populatedPost = await Post.findById(postId).populate({
     path: 'comments.userId',
+  }).populate({
+    path: 'userId',
   });
 
   if (!populatedPost) {
@@ -109,6 +111,8 @@ const addFavorite = async (postId: string, userId: string) => {
 
   const populatedPost = await Post.findById(postId).populate({
     path: 'comments.userId',
+  }).populate({
+    path: 'userId',
   });
 
   if (!populatedPost) {
@@ -143,6 +147,8 @@ const removeFavorite = async (postId: string, userId: string) => {
 
   const populatedPost = await Post.findById(postId).populate({
     path: 'comments.userId',
+  }).populate({
+    path: 'userId',
   });
 
   if (!populatedPost) {
@@ -168,6 +174,8 @@ const removeUpvote = async (postId: string, userId: string) => {
   await post.save();
   const populatedPost = await Post.findById(postId).populate({
     path: 'comments.userId',
+  }).populate({
+    path: 'userId',
   });
 
   if (!populatedPost) {
@@ -210,6 +218,8 @@ const commentOnPost = async (postId: string, userId: string, content: string): P
   await post.save();
   const populatedPost = await Post.findById(postId).populate({
     path: 'comments.userId',
+  }).populate({
+    path: 'userId',
   });
 
   if (!populatedPost) {
@@ -279,6 +289,19 @@ const updateComment = async (postId: string, commentId: string, content: string)
   return post;
 };
 
+const getSinglePost = async (postId: string): Promise<IPost> => {
+  const post = await Post.findById(postId).populate({
+    path: 'comments.userId',
+  }).populate({
+    path: 'userId',
+  });
+
+  if (!post) {
+    throw new AppError(httpStatus.NOT_FOUND, "Post not found");
+  }
+  return post;
+};
+
 export const PostServices = {
   getUpvote,
   createPost,
@@ -292,5 +315,6 @@ export const PostServices = {
   deleteComment,
   updateComment,
   addFavorite,
-  removeFavorite
+  removeFavorite,
+  getSinglePost
 };
