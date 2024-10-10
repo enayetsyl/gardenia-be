@@ -19,6 +19,7 @@ const user_model_1 = require("./user.model");
 const sendImageToCloudinary_1 = require("../../utils/sendImageToCloudinary");
 const AppError_1 = __importDefault(require("../../errors/AppError"));
 const http_status_1 = __importDefault(require("http-status"));
+const post_model_1 = require("../Post/post.model");
 const createUser = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield user_model_1.User.create(payload);
     return result;
@@ -95,13 +96,25 @@ const followUser = (followerId, followedId) => __awaiter(void 0, void 0, void 0,
     return follower;
 });
 const getFollowers = (userId) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log('user id in the follower service', userId);
     const user = yield user_model_1.User.findById(userId);
     if (!user) {
         throw new AppError_1.default(http_status_1.default.NOT_FOUND, "User not found");
     }
     const followers = yield user_model_1.User.find({ _id: { $in: user.followersId } });
     return followers;
+});
+const getProfilePhotos = (userId) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield user_model_1.User.findById(userId);
+    if (!user) {
+        throw new AppError_1.default(http_status_1.default.NOT_FOUND, "User not found");
+    }
+    const posts = yield post_model_1.Post.find({ userId }).select('images');
+    const allImages = [
+        user.userImage,
+        user.coverImage,
+        ...posts.flatMap(post => post.images || [])
+    ].filter(Boolean);
+    return allImages;
 });
 exports.UserServices = {
     getSingleUserFromDB,
@@ -111,5 +124,6 @@ exports.UserServices = {
     uploadUserCoverImage,
     verifyAccount,
     followUser,
-    getFollowers
+    getFollowers,
+    getProfilePhotos
 };

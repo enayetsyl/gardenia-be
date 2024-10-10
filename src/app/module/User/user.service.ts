@@ -6,6 +6,7 @@ import { User } from "./user.model";
 import { sendImageToCloudinary } from "../../utils/sendImageToCloudinary";
 import AppError from "../../errors/AppError";
 import httpStatus from "http-status";
+import { Post } from "../Post/post.model";
 
 const createUser = async (payload: TUser) => {
   const result = await User.create(payload);
@@ -118,7 +119,6 @@ const followUser = async (followerId: string, followedId: string) => {
 };
 
 const getFollowers = async (userId: string) => {
-  console.log('user id in the follower service', userId);
   const user = await User.findById(userId);
   if (!user) {
     throw new AppError(httpStatus.NOT_FOUND, "User not found");
@@ -130,6 +130,21 @@ const getFollowers = async (userId: string) => {
 
 };
 
+const getProfilePhotos = async (userId: string) => {
+  const user = await User.findById(userId);
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, "User not found");
+  }
+  const posts = await Post.find({ userId }).select('images');
+
+  const allImages = [
+    user.userImage,
+    user.coverImage,
+    ...posts.flatMap(post => post.images || [])
+  ].filter(Boolean) as string[];
+
+  return allImages;
+};
 
 export const UserServices = {
   getSingleUserFromDB,
@@ -139,5 +154,6 @@ export const UserServices = {
   uploadUserCoverImage,
   verifyAccount, 
   followUser,
-  getFollowers
+  getFollowers,
+  getProfilePhotos
 };

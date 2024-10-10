@@ -25,4 +25,5 @@ router.get('/:id', user_controller_1.UserControllers.getSingleUser);
 router.patch('/verify-account', user_controller_1.UserControllers.verifyAccount);
 router.post("/follow", user_controller_1.UserControllers.followUser);
 router.get("/followers/:userId", user_controller_1.UserControllers.getFollowers);
+router.get("/profile-photos/:userId", user_controller_1.UserControllers.getProfilePhotos);
 exports.UserRoutes = router;

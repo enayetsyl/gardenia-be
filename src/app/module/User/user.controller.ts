@@ -79,7 +79,6 @@ const followUser = catchAsync(async(req, res) => {
 
 const getFollowers = catchAsync(async(req, res) => {
   const { userId } = req.params;
-  console.log('user id in the controller', userId);
   const user = await UserServices.getFollowers(userId);
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -90,7 +89,19 @@ const getFollowers = catchAsync(async(req, res) => {
 })
 
 
+const getProfilePhotos = catchAsync(async(req, res) => {
+  const { userId } = req.params;
+  const images = await UserServices.getProfilePhotos(userId);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Profile photos retrieved successfully!',
+    data: images,
+  });
+})
+
+
 
 export const UserControllers = {
-  userRegister, getAllUsers, getSingleUser, uploadUserImage, uploadUserCoverImage, verifyAccount, followUser, getFollowers
+  userRegister, getAllUsers, getSingleUser, uploadUserImage, uploadUserCoverImage, verifyAccount, followUser, getFollowers, getProfilePhotos
  };

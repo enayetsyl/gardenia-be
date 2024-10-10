@@ -34,6 +34,7 @@ router.get('/:id', UserControllers.getSingleUser);
 router.patch('/verify-account', UserControllers.verifyAccount);
 router.post("/follow", UserControllers.followUser);
 router.get("/followers/:userId", UserControllers.getFollowers);
+router.get("/profile-photos/:userId", UserControllers.getProfilePhotos);
 
 
 
