@@ -66,8 +66,16 @@ const verifyAccount = catchAsync(async(req, res) => {
   });
 })
 
-
-
+const followUser = catchAsync(async(req, res) => {
+  const { followerId, followedId } = req.body;
+  const user = await UserServices.followUser(followerId, followedId);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'User followed successfully!',
+    data: user,
+  });
+})
 export const UserControllers = {
-  userRegister, getAllUsers, getSingleUser, uploadUserImage, uploadUserCoverImage, verifyAccount
+  userRegister, getAllUsers, getSingleUser, uploadUserImage, uploadUserCoverImage, verifyAccount, followUser
  };

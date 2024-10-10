@@ -86,11 +86,44 @@ const verifyAccount = async (userId: string): Promise<TUser | null> => {
   return result;
 };
 
+const followUser = async (followerId: string, followedId: string) => {
+  const follower = await User.findById(followerId);
+  const followed = await User.findById(followedId);
+
+  if (!follower || !followed) {
+    throw new AppError(httpStatus.NOT_FOUND, "User not found");
+  }
+
+  // Initialize followingId and followersId if they are undefined
+  follower.followingId = follower.followingId || [];
+  followed.followersId = followed.followersId || [];
+
+  if (follower.followingId.includes(followedId)) {
+    throw new AppError(httpStatus.BAD_REQUEST, "You are already following this user");
+  }
+
+  // Increment following and follower counts, defaulting to 0 if undefined
+  follower.followingCount = (follower.followingCount ?? 0) + 1;
+  followed.followerCount = (followed.followerCount ?? 0) + 1;
+
+  // Add followedId and followerId to respective arrays
+  follower.followingId.push(followedId);
+  followed.followersId.push(followerId);
+
+  // Save both users
+  await follower.save();
+  await followed.save();
+
+  return follower;
+};
+
+
 export const UserServices = {
   getSingleUserFromDB,
   getAllUsersFromDB,
   createUser,
   uploadUserImage,
   uploadUserCoverImage,
-  verifyAccount,
+  verifyAccount, 
+  followUser
 };

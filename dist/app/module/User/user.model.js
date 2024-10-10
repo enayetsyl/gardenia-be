@@ -59,6 +59,16 @@ const userSchema = new mongoose_1.Schema({
         default: false,
     },
     favoritePosts: [String],
+    followerCount: {
+        type: Number,
+        default: 0,
+    },
+    followersId: [String],
+    followingCount: {
+        type: Number,
+        default: 0,
+    },
+    followingId: [String],
 }, {
     timestamps: true,
     virtuals: true,

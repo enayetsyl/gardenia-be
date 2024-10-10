@@ -72,6 +72,16 @@ const verifyAccount = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, 
         data: user,
     });
 }));
+const followUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { followerId, followedId } = req.body;
+    const user = yield user_service_1.UserServices.followUser(followerId, followedId);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: 'User followed successfully!',
+        data: user,
+    });
+}));
 exports.UserControllers = {
-    userRegister, getAllUsers, getSingleUser, uploadUserImage, uploadUserCoverImage, verifyAccount
+    userRegister, getAllUsers, getSingleUser, uploadUserImage, uploadUserCoverImage, verifyAccount, followUser
 };

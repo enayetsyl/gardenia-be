@@ -70,6 +70,30 @@ const verifyAccount = (userId) => __awaiter(void 0, void 0, void 0, function* ()
     const result = yield user_model_1.User.findByIdAndUpdate(userId, { isVerified: true }, { new: true });
     return result;
 });
+const followUser = (followerId, followedId) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a, _b;
+    const follower = yield user_model_1.User.findById(followerId);
+    const followed = yield user_model_1.User.findById(followedId);
+    if (!follower || !followed) {
+        throw new AppError_1.default(http_status_1.default.NOT_FOUND, "User not found");
+    }
+    // Initialize followingId and followersId if they are undefined
+    follower.followingId = follower.followingId || [];
+    followed.followersId = followed.followersId || [];
+    if (follower.followingId.includes(followedId)) {
+        throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "You are already following this user");
+    }
+    // Increment following and follower counts, defaulting to 0 if undefined
+    follower.followingCount = ((_a = follower.followingCount) !== null && _a !== void 0 ? _a : 0) + 1;
+    followed.followerCount = ((_b = followed.followerCount) !== null && _b !== void 0 ? _b : 0) + 1;
+    // Add followedId and followerId to respective arrays
+    follower.followingId.push(followedId);
+    followed.followersId.push(followerId);
+    // Save both users
+    yield follower.save();
+    yield followed.save();
+    return follower;
+});
 exports.UserServices = {
     getSingleUserFromDB,
     getAllUsersFromDB,
@@ -77,4 +101,5 @@ exports.UserServices = {
     uploadUserImage,
     uploadUserCoverImage,
     verifyAccount,
+    followUser
 };

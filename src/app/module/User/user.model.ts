@@ -50,6 +50,16 @@ const userSchema = new Schema<TUser, IUserModel>(
       default: false,
     },
     favoritePosts: [String],
+    followerCount: {
+      type: Number,
+      default: 0,
+    },
+    followersId: [String],
+    followingCount: {
+      type: Number,
+      default: 0,
+    },  
+    followingId: [String],
   },
   {
     timestamps: true,

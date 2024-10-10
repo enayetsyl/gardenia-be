@@ -32,6 +32,7 @@ router.post('/upload-cover-image/:id',
 router.get('/', UserControllers.getAllUsers);
 router.get('/:id', UserControllers.getSingleUser);
 router.patch('/verify-account', UserControllers.verifyAccount);
+router.post("/follow", UserControllers.followUser);
 
 
 

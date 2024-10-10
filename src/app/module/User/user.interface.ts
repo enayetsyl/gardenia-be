@@ -18,6 +18,10 @@ export interface TUser {
   updatedAt?: Date;
   isVerified: boolean;
   favoritePosts?: string[];
+  followerCount?: number;
+  followersId?: string[];
+  followingCount?: number;
+  followingId?: string[];
 }
 
 export interface IUserModel extends Model<TUser> {

@@ -23,4 +23,5 @@ sendImageToCloudinary_1.upload.single('image'), user_controller_1.UserController
 router.get('/', user_controller_1.UserControllers.getAllUsers);
 router.get('/:id', user_controller_1.UserControllers.getSingleUser);
 router.patch('/verify-account', user_controller_1.UserControllers.verifyAccount);
+router.post("/follow", user_controller_1.UserControllers.followUser);
 exports.UserRoutes = router;
