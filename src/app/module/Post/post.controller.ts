@@ -60,6 +60,8 @@ const upvotePost = catchAsync(async (req, res) => {
   });
 });
 
+
+
 const removeUpvote = catchAsync(async (req, res) => {
   const postId = req.params.postId;
   const userId = req.body.userId;
@@ -71,6 +73,31 @@ const removeUpvote = catchAsync(async (req, res) => {
     data: post,
   });
 });
+
+const addFavorite = catchAsync(async (req, res) => {
+  const postId = req.params.postId;
+  const userId = req.body.userId;
+  const post = await PostServices.addFavorite(postId, userId);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Post added to favorites successfully",
+    data: post,
+  });
+});
+
+const removeFavorite = catchAsync(async (req, res) => {
+  const postId = req.params.postId;
+  const userId = req.body.userId;
+  const post = await PostServices.removeFavorite(postId, userId);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Post removed from favorites successfully",
+    data: post,
+  });
+});
+
 
 const deletePost = catchAsync(async (req, res) => {
   const postId = req.params.id;
@@ -114,7 +141,6 @@ const updatePost = catchAsync(async (req, res) => {
 const deleteComment = catchAsync(async (req, res) => {
   const postId = req.params.postId;
   const commentId = req.params.commentId;
-  console.log('postId', postId, 'commentId', commentId)
   const post = await PostServices.deleteComment(postId, commentId);
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -147,5 +173,5 @@ export const PostControllers = {
   deletePost,
   commentOnPost,
   updatePost,
-  deleteComment, updateComment
+  deleteComment, updateComment, addFavorite, removeFavorite
 }

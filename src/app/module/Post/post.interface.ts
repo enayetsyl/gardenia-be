@@ -9,6 +9,8 @@ export type IPost = {
   userId: mongoose.Types.ObjectId;
   upvoteCount?: number;
   upvotedBy?: string[];
+  favoriteCount?: number;
+  favoritedBy?: string[];
   comments?: IComment[];
   link?: string;
   createdAt?: Date;

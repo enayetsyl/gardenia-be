@@ -10,6 +10,8 @@ router.get("/getPosts/:id", PostControllers.getPost);
 router.get("/getNewsFeed", PostControllers.getNewsFeed);
 router.post("/upvote/:postId", PostControllers.upvotePost);
 router.post("/removeUpvote/:postId", PostControllers.removeUpvote);
+router.post("/addFavorite/:postId", PostControllers.addFavorite);
+router.post("/removeFavorite/:postId", PostControllers.removeFavorite);
 router.delete("/delete/:id", PostControllers.deletePost);
 router.post("/addComment/:postId", PostControllers.commentOnPost);
 router.put("/update/:id", upload.array('images', 5), PostControllers.updatePost);

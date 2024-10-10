@@ -50,6 +50,11 @@ const postSchema = new mongoose_1.Schema({
         default: 0,
     },
     upvotedBy: [String],
+    favoriteCount: {
+        type: Number,
+        default: 0,
+    },
+    favoritedBy: [String],
     comments: [commentSchema],
     link: {
         type: String,

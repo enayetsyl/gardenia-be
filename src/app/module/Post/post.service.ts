@@ -88,6 +88,50 @@ const upvotePost = async (postId: string, userId: string): Promise<IPost> => {
   return populatedPost;
 };
 
+const addFavorite = async (postId: string, userId: string) => {
+  const post = await Post.findById(postId);
+  if (!post) {
+    throw new AppError(httpStatus.NOT_FOUND, "Post not found");
+  }
+
+  post.favoriteCount = (post.favoriteCount ?? 0) + 1;
+  post.favoritedBy = [...(post.favoritedBy ?? []), userId];
+  await post.save();
+
+  const populatedPost = await Post.findById(postId).populate({
+    path: 'comments.userId',
+  });
+
+  if (!populatedPost) {
+    throw new AppError(httpStatus.NOT_FOUND, "Post not found after saving comment");
+  }
+
+  return populatedPost;
+};
+
+const removeFavorite = async (postId: string, userId: string) => {
+  const post = await Post.findById(postId);
+  if (!post) {
+    throw new AppError(httpStatus.NOT_FOUND, "Post not found");
+  }
+  post.favoriteCount = Math.max((post.favoriteCount ?? 1) - 1, 0); 
+
+  if (post.favoritedBy) {
+    post.favoritedBy = post.favoritedBy.filter(id => id !== userId.toString());
+  }
+
+  await post.save();
+  const populatedPost = await Post.findById(postId).populate({
+    path: 'comments.userId',
+  });
+
+  if (!populatedPost) {
+    throw new AppError(httpStatus.NOT_FOUND, "Post not found after saving comment");
+  }
+
+  return populatedPost;
+}
+
 const removeUpvote = async (postId: string, userId: string) => {
   const post = await Post.findById(postId);
   // Check if user has upvoted the post
@@ -156,7 +200,6 @@ const commentOnPost = async (postId: string, userId: string, content: string): P
 };  
 
 const updatePost = async (postId: string, postData: IPost, files: Express.Multer.File[]): Promise<IPost> => { 
-  
   const imageUrls = [];
   if (files && files.length > 0) {
     for (const file of files) {
@@ -172,10 +215,8 @@ const updatePost = async (postId: string, postData: IPost, files: Express.Multer
     ...postData,
     images: imageUrls
   }
-
   
   const post = await Post.findByIdAndUpdate(postId, updatedPostData, { new: true }); 
-
 
   if (!post) {
     throw new AppError(httpStatus.NOT_FOUND, "Post not found");
@@ -187,11 +228,8 @@ const updatePost = async (postId: string, postData: IPost, files: Express.Multer
  
 };
 
-
 const deleteComment = async (postId: string, commentId: string): Promise<IPost> => {
-  // console.log('postId', postId, 'commentId', commentId)
   const post = await Post.findById(postId);
-  // console.log('post', post)
   if (!post) {
     throw new AppError(httpStatus.NOT_FOUND, "Post not found");
   }
@@ -200,7 +238,6 @@ const deleteComment = async (postId: string, commentId: string): Promise<IPost> 
     post.comments = post.comments.filter(comment => comment?._id?.toString() !== commentId);
   }
 
-  console.log('Remaining comments:', post.comments);
   await post.save();
   return post;
 };
@@ -233,5 +270,7 @@ export const PostServices = {
   commentOnPost, 
   updatePost,
   deleteComment,
-  updateComment
+  updateComment,
+  addFavorite,
+  removeFavorite
 };

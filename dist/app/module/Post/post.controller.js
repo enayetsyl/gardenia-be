@@ -77,6 +77,28 @@ const removeUpvote = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, v
         data: post,
     });
 }));
+const addFavorite = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const postId = req.params.postId;
+    const userId = req.body.userId;
+    const post = yield post_service_1.PostServices.addFavorite(postId, userId);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: "Post added to favorites successfully",
+        data: post,
+    });
+}));
+const removeFavorite = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const postId = req.params.postId;
+    const userId = req.body.userId;
+    const post = yield post_service_1.PostServices.removeFavorite(postId, userId);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: "Post removed from favorites successfully",
+        data: post,
+    });
+}));
 const deletePost = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const postId = req.params.id;
     const post = yield post_service_1.PostServices.deletePost(postId);
@@ -114,7 +136,6 @@ const updatePost = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, voi
 const deleteComment = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const postId = req.params.postId;
     const commentId = req.params.commentId;
-    console.log('postId', postId, 'commentId', commentId);
     const post = yield post_service_1.PostServices.deleteComment(postId, commentId);
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,
@@ -144,5 +165,5 @@ exports.PostControllers = {
     deletePost,
     commentOnPost,
     updatePost,
-    deleteComment, updateComment
+    deleteComment, updateComment, addFavorite, removeFavorite
 };

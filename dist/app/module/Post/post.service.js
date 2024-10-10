@@ -83,6 +83,42 @@ const upvotePost = (postId, userId) => __awaiter(void 0, void 0, void 0, functio
     }
     return populatedPost;
 });
+const addFavorite = (postId, userId) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a, _b;
+    const post = yield post_model_1.Post.findById(postId);
+    if (!post) {
+        throw new AppError_1.default(http_status_1.default.NOT_FOUND, "Post not found");
+    }
+    post.favoriteCount = ((_a = post.favoriteCount) !== null && _a !== void 0 ? _a : 0) + 1;
+    post.favoritedBy = [...((_b = post.favoritedBy) !== null && _b !== void 0 ? _b : []), userId];
+    yield post.save();
+    const populatedPost = yield post_model_1.Post.findById(postId).populate({
+        path: 'comments.userId',
+    });
+    if (!populatedPost) {
+        throw new AppError_1.default(http_status_1.default.NOT_FOUND, "Post not found after saving comment");
+    }
+    return populatedPost;
+});
+const removeFavorite = (postId, userId) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    const post = yield post_model_1.Post.findById(postId);
+    if (!post) {
+        throw new AppError_1.default(http_status_1.default.NOT_FOUND, "Post not found");
+    }
+    post.favoriteCount = Math.max(((_a = post.favoriteCount) !== null && _a !== void 0 ? _a : 1) - 1, 0);
+    if (post.favoritedBy) {
+        post.favoritedBy = post.favoritedBy.filter(id => id !== userId.toString());
+    }
+    yield post.save();
+    const populatedPost = yield post_model_1.Post.findById(postId).populate({
+        path: 'comments.userId',
+    });
+    if (!populatedPost) {
+        throw new AppError_1.default(http_status_1.default.NOT_FOUND, "Post not found after saving comment");
+    }
+    return populatedPost;
+});
 const removeUpvote = (postId, userId) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     const post = yield post_model_1.Post.findById(postId);
@@ -155,16 +191,13 @@ const updatePost = (postId, postData, files) => __awaiter(void 0, void 0, void 0
     return post;
 });
 const deleteComment = (postId, commentId) => __awaiter(void 0, void 0, void 0, function* () {
-    // console.log('postId', postId, 'commentId', commentId)
     const post = yield post_model_1.Post.findById(postId);
-    // console.log('post', post)
     if (!post) {
         throw new AppError_1.default(http_status_1.default.NOT_FOUND, "Post not found");
     }
     if (post.comments) {
         post.comments = post.comments.filter(comment => { var _a; return ((_a = comment === null || comment === void 0 ? void 0 : comment._id) === null || _a === void 0 ? void 0 : _a.toString()) !== commentId; });
     }
-    console.log('Remaining comments:', post.comments);
     yield post.save();
     return post;
 });
@@ -193,5 +226,7 @@ exports.PostServices = {
     commentOnPost,
     updatePost,
     deleteComment,
-    updateComment
+    updateComment,
+    addFavorite,
+    removeFavorite
 };
