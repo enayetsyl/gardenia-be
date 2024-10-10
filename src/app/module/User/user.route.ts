@@ -35,6 +35,8 @@ router.patch('/verify-account', UserControllers.verifyAccount);
 router.post("/follow", UserControllers.followUser);
 router.get("/followers/:userId", UserControllers.getFollowers);
 router.get("/profile-photos/:userId", UserControllers.getProfilePhotos);
+router.put("/update-bio/:userId", UserControllers.updateBio);
+router.put("/update-details/:userId", UserControllers.updateDetails);
 
 
 

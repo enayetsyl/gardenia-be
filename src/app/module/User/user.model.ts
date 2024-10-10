@@ -60,6 +60,26 @@ const userSchema = new Schema<TUser, IUserModel>(
       default: 0,
     },  
     followingId: [String],
+    bio: {
+      type: String,
+      default: 'Write something about yourself',
+    },
+    study: {
+      type: String,
+      default: '',
+    },
+    location: {
+      type: String,
+      default: '',
+    },
+    maritalStatus: {
+      type: String,
+      default: '',
+    },
+    website: {
+      type: String,
+      default: '',
+    },
   },
   {
     timestamps: true,
@@ -68,7 +88,7 @@ const userSchema = new Schema<TUser, IUserModel>(
 );
 
 userSchema.pre('save', async function (next) {
-  const user = this; // Reference to the user document
+  const user = this; 
 
   // Hash the password only if it's new or has been modified
   if (user.isModified('password')) {

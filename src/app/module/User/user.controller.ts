@@ -100,8 +100,30 @@ const getProfilePhotos = catchAsync(async(req, res) => {
   });
 })
 
+const updateBio = catchAsync(async(req, res) => {
+  const { userId } = req.params;
+  const { bio } = req.body;
+  const user = await UserServices.updateBio(userId, bio);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Bio updated successfully!',
+    data: user,
+  });
+})
 
+const updateDetails = catchAsync(async(req, res) => {
+  const { userId } = req.params;
+  const { study, location, maritalStatus, website } = req.body;
+  const user = await UserServices.updateDetails(userId, study, location, maritalStatus, website);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Details updated successfully!',
+    data: user,
+  });
+})
 
 export const UserControllers = {
-  userRegister, getAllUsers, getSingleUser, uploadUserImage, uploadUserCoverImage, verifyAccount, followUser, getFollowers, getProfilePhotos
+  userRegister, getAllUsers, getSingleUser, uploadUserImage, uploadUserCoverImage, verifyAccount, followUser, getFollowers, getProfilePhotos, updateBio, updateDetails
  };

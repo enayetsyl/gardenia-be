@@ -116,6 +116,14 @@ const getProfilePhotos = (userId) => __awaiter(void 0, void 0, void 0, function*
     ].filter(Boolean);
     return allImages;
 });
+const updateBio = (userId, bio) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield user_model_1.User.findByIdAndUpdate(userId, { bio }, { new: true });
+    return user;
+});
+const updateDetails = (userId, study, location, maritalStatus, website) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield user_model_1.User.findByIdAndUpdate(userId, { study, location, maritalStatus, website }, { new: true });
+    return user;
+});
 exports.UserServices = {
     getSingleUserFromDB,
     getAllUsersFromDB,
@@ -125,5 +133,7 @@ exports.UserServices = {
     verifyAccount,
     followUser,
     getFollowers,
-    getProfilePhotos
+    getProfilePhotos,
+    updateBio,
+    updateDetails
 };

@@ -146,6 +146,16 @@ const getProfilePhotos = async (userId: string) => {
   return allImages;
 };
 
+const updateBio = async (userId: string, bio: string) => {
+  const user = await User.findByIdAndUpdate(userId, { bio }, { new: true });
+  return user;
+};
+
+const updateDetails = async (userId: string, study: string, location: string, maritalStatus: string, website: string) => {
+  const user = await User.findByIdAndUpdate(userId, { study, location, maritalStatus, website }, { new: true });
+  return user;
+};
+
 export const UserServices = {
   getSingleUserFromDB,
   getAllUsersFromDB,
@@ -155,5 +165,7 @@ export const UserServices = {
   verifyAccount, 
   followUser,
   getFollowers,
-  getProfilePhotos
+  getProfilePhotos,
+  updateBio,
+  updateDetails
 };

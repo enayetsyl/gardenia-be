@@ -22,6 +22,11 @@ export interface TUser {
   followersId?: string[];
   followingCount?: number;
   followingId?: string[];
+  bio?: string;
+  study?: string;
+  location?: string;
+  maritalStatus?: string;
+  website?: string;
 }
 
 export interface IUserModel extends Model<TUser> {

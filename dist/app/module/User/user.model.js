@@ -69,13 +69,33 @@ const userSchema = new mongoose_1.Schema({
         default: 0,
     },
     followingId: [String],
+    bio: {
+        type: String,
+        default: 'Write something about yourself',
+    },
+    study: {
+        type: String,
+        default: '',
+    },
+    location: {
+        type: String,
+        default: '',
+    },
+    maritalStatus: {
+        type: String,
+        default: '',
+    },
+    website: {
+        type: String,
+        default: '',
+    },
 }, {
     timestamps: true,
     virtuals: true,
 });
 userSchema.pre('save', function (next) {
     return __awaiter(this, void 0, void 0, function* () {
-        const user = this; // Reference to the user document
+        const user = this;
         // Hash the password only if it's new or has been modified
         if (user.isModified('password')) {
             user.password = yield bcrypt_1.default.hash(user.password, Number(config_1.default.bcrypt_salt_rounds));

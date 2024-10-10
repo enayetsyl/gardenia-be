@@ -102,6 +102,28 @@ const getProfilePhotos = (0, catchAsync_1.default)((req, res) => __awaiter(void 
         data: images,
     });
 }));
+const updateBio = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { userId } = req.params;
+    const { bio } = req.body;
+    const user = yield user_service_1.UserServices.updateBio(userId, bio);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: 'Bio updated successfully!',
+        data: user,
+    });
+}));
+const updateDetails = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { userId } = req.params;
+    const { study, location, maritalStatus, website } = req.body;
+    const user = yield user_service_1.UserServices.updateDetails(userId, study, location, maritalStatus, website);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: 'Details updated successfully!',
+        data: user,
+    });
+}));
 exports.UserControllers = {
-    userRegister, getAllUsers, getSingleUser, uploadUserImage, uploadUserCoverImage, verifyAccount, followUser, getFollowers, getProfilePhotos
+    userRegister, getAllUsers, getSingleUser, uploadUserImage, uploadUserCoverImage, verifyAccount, followUser, getFollowers, getProfilePhotos, updateBio, updateDetails
 };
