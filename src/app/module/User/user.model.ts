@@ -66,19 +66,19 @@ const userSchema = new Schema<TUser, IUserModel>(
     },
     study: {
       type: String,
-      default: '',
+      default: 'Write your study',
     },
     location: {
       type: String,
-      default: '',
+      default: 'Write your location',
     },
     maritalStatus: {
       type: String,
-      default: '',
+      default: 'Write your marital status',
     },
     website: {
       type: String,
-      default: '',
+      default: 'Write your website link',
     },
   },
   {
