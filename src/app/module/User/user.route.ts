@@ -33,6 +33,7 @@ router.get('/', UserControllers.getAllUsers);
 router.get('/:id', UserControllers.getSingleUser);
 router.patch('/verify-account', UserControllers.verifyAccount);
 router.post("/follow", UserControllers.followUser);
+router.get("/followers/:userId", UserControllers.getFollowers);
 
 
 

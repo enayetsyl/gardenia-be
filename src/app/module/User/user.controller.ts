@@ -76,6 +76,21 @@ const followUser = catchAsync(async(req, res) => {
     data: user,
   });
 })
+
+const getFollowers = catchAsync(async(req, res) => {
+  const { userId } = req.params;
+  console.log('user id in the controller', userId);
+  const user = await UserServices.getFollowers(userId);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Followers retrieved successfully!',
+    data: user,
+  });
+})
+
+
+
 export const UserControllers = {
-  userRegister, getAllUsers, getSingleUser, uploadUserImage, uploadUserCoverImage, verifyAccount, followUser
+  userRegister, getAllUsers, getSingleUser, uploadUserImage, uploadUserCoverImage, verifyAccount, followUser, getFollowers
  };

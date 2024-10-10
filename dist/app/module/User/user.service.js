@@ -94,6 +94,15 @@ const followUser = (followerId, followedId) => __awaiter(void 0, void 0, void 0,
     yield followed.save();
     return follower;
 });
+const getFollowers = (userId) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log('user id in the follower service', userId);
+    const user = yield user_model_1.User.findById(userId);
+    if (!user) {
+        throw new AppError_1.default(http_status_1.default.NOT_FOUND, "User not found");
+    }
+    const followers = yield user_model_1.User.find({ _id: { $in: user.followersId } });
+    return followers;
+});
 exports.UserServices = {
     getSingleUserFromDB,
     getAllUsersFromDB,
@@ -101,5 +110,6 @@ exports.UserServices = {
     uploadUserImage,
     uploadUserCoverImage,
     verifyAccount,
-    followUser
+    followUser,
+    getFollowers
 };

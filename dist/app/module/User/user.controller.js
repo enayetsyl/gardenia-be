@@ -82,6 +82,17 @@ const followUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, voi
         data: user,
     });
 }));
+const getFollowers = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { userId } = req.params;
+    console.log('user id in the controller', userId);
+    const user = yield user_service_1.UserServices.getFollowers(userId);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: 'Followers retrieved successfully!',
+        data: user,
+    });
+}));
 exports.UserControllers = {
-    userRegister, getAllUsers, getSingleUser, uploadUserImage, uploadUserCoverImage, verifyAccount, followUser
+    userRegister, getAllUsers, getSingleUser, uploadUserImage, uploadUserCoverImage, verifyAccount, followUser, getFollowers
 };

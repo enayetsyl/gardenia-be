@@ -117,6 +117,19 @@ const followUser = async (followerId: string, followedId: string) => {
   return follower;
 };
 
+const getFollowers = async (userId: string) => {
+  console.log('user id in the follower service', userId);
+  const user = await User.findById(userId);
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, "User not found");
+  }
+
+  const followers = await User.find({ _id: { $in: user.followersId } });
+
+  return followers;
+
+};
+
 
 export const UserServices = {
   getSingleUserFromDB,
@@ -125,5 +138,6 @@ export const UserServices = {
   uploadUserImage,
   uploadUserCoverImage,
   verifyAccount, 
-  followUser
+  followUser,
+  getFollowers
 };
