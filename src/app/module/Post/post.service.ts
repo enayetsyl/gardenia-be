@@ -89,14 +89,23 @@ const upvotePost = async (postId: string, userId: string): Promise<IPost> => {
 };
 
 const addFavorite = async (postId: string, userId: string) => {
+ 
   const post = await Post.findById(postId);
   if (!post) {
     throw new AppError(httpStatus.NOT_FOUND, "Post not found");
+  }
+  const user = await User.findById(userId);
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, "User not found");
   }
 
   post.favoriteCount = (post.favoriteCount ?? 0) + 1;
   post.favoritedBy = [...(post.favoritedBy ?? []), userId];
   await post.save();
+
+
+  user.favoritePosts = [...(user.favoritePosts ?? []), postId];
+  await user.save();
 
   const populatedPost = await Post.findById(postId).populate({
     path: 'comments.userId',
@@ -114,6 +123,13 @@ const removeFavorite = async (postId: string, userId: string) => {
   if (!post) {
     throw new AppError(httpStatus.NOT_FOUND, "Post not found");
   }
+
+
+  const user = await User.findById(userId);
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, "User not found");
+  }
+
   post.favoriteCount = Math.max((post.favoriteCount ?? 1) - 1, 0); 
 
   if (post.favoritedBy) {
@@ -121,6 +137,10 @@ const removeFavorite = async (postId: string, userId: string) => {
   }
 
   await post.save();
+
+  user.favoritePosts = user.favoritePosts?.filter(id => id !== postId.toString());
+  await user.save();
+
   const populatedPost = await Post.findById(postId).populate({
     path: 'comments.userId',
   });

@@ -17,6 +17,7 @@ export interface TUser {
   cratedAt?: Date;
   updatedAt?: Date;
   isVerified: boolean;
+  favoritePosts?: string[];
 }
 
 export interface IUserModel extends Model<TUser> {

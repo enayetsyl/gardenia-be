@@ -49,6 +49,7 @@ const userSchema = new Schema<TUser, IUserModel>(
       type: Boolean,
       default: false,
     },
+    favoritePosts: [String],
   },
   {
     timestamps: true,
@@ -57,15 +58,19 @@ const userSchema = new Schema<TUser, IUserModel>(
 );
 
 userSchema.pre('save', async function (next) {
-  // eslint-disable-next-line @typescript-eslint/no-this-alias
-  const user = this; // doc
-  // hashing password and save into DB
-  user.password = await bcrypt.hash(
-    user.password,
-    Number(config.bcrypt_salt_rounds),
-  );
+  const user = this; // Reference to the user document
+
+  // Hash the password only if it's new or has been modified
+  if (user.isModified('password')) {
+    user.password = await bcrypt.hash(
+      user.password,
+      Number(config.bcrypt_salt_rounds),
+    );
+  }
+
   next();
 });
+
 
 // set '' after saving password
 userSchema.post('save', function (doc, next) {

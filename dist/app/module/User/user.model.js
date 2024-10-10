@@ -58,16 +58,18 @@ const userSchema = new mongoose_1.Schema({
         type: Boolean,
         default: false,
     },
+    favoritePosts: [String],
 }, {
     timestamps: true,
     virtuals: true,
 });
 userSchema.pre('save', function (next) {
     return __awaiter(this, void 0, void 0, function* () {
-        // eslint-disable-next-line @typescript-eslint/no-this-alias
-        const user = this; // doc
-        // hashing password and save into DB
-        user.password = yield bcrypt_1.default.hash(user.password, Number(config_1.default.bcrypt_salt_rounds));
+        const user = this; // Reference to the user document
+        // Hash the password only if it's new or has been modified
+        if (user.isModified('password')) {
+            user.password = yield bcrypt_1.default.hash(user.password, Number(config_1.default.bcrypt_salt_rounds));
+        }
         next();
     });
 });

@@ -77,6 +77,8 @@ const removeUpvote = catchAsync(async (req, res) => {
 const addFavorite = catchAsync(async (req, res) => {
   const postId = req.params.postId;
   const userId = req.body.userId;
+  console.log('postId', postId);
+  console.log('userId', userId);
   const post = await PostServices.addFavorite(postId, userId);
   sendResponse(res, {
     statusCode: httpStatus.OK,

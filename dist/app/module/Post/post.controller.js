@@ -80,6 +80,8 @@ const removeUpvote = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, v
 const addFavorite = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const postId = req.params.postId;
     const userId = req.body.userId;
+    console.log('postId', postId);
+    console.log('userId', userId);
     const post = yield post_service_1.PostServices.addFavorite(postId, userId);
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,

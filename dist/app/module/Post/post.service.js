@@ -84,14 +84,20 @@ const upvotePost = (postId, userId) => __awaiter(void 0, void 0, void 0, functio
     return populatedPost;
 });
 const addFavorite = (postId, userId) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a, _b;
+    var _a, _b, _c;
     const post = yield post_model_1.Post.findById(postId);
     if (!post) {
         throw new AppError_1.default(http_status_1.default.NOT_FOUND, "Post not found");
     }
+    const user = yield user_model_1.User.findById(userId);
+    if (!user) {
+        throw new AppError_1.default(http_status_1.default.NOT_FOUND, "User not found");
+    }
     post.favoriteCount = ((_a = post.favoriteCount) !== null && _a !== void 0 ? _a : 0) + 1;
     post.favoritedBy = [...((_b = post.favoritedBy) !== null && _b !== void 0 ? _b : []), userId];
     yield post.save();
+    user.favoritePosts = [...((_c = user.favoritePosts) !== null && _c !== void 0 ? _c : []), postId];
+    yield user.save();
     const populatedPost = yield post_model_1.Post.findById(postId).populate({
         path: 'comments.userId',
     });
@@ -101,16 +107,22 @@ const addFavorite = (postId, userId) => __awaiter(void 0, void 0, void 0, functi
     return populatedPost;
 });
 const removeFavorite = (postId, userId) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
+    var _a, _b;
     const post = yield post_model_1.Post.findById(postId);
     if (!post) {
         throw new AppError_1.default(http_status_1.default.NOT_FOUND, "Post not found");
+    }
+    const user = yield user_model_1.User.findById(userId);
+    if (!user) {
+        throw new AppError_1.default(http_status_1.default.NOT_FOUND, "User not found");
     }
     post.favoriteCount = Math.max(((_a = post.favoriteCount) !== null && _a !== void 0 ? _a : 1) - 1, 0);
     if (post.favoritedBy) {
         post.favoritedBy = post.favoritedBy.filter(id => id !== userId.toString());
     }
     yield post.save();
+    user.favoritePosts = (_b = user.favoritePosts) === null || _b === void 0 ? void 0 : _b.filter(id => id !== postId.toString());
+    yield user.save();
     const populatedPost = yield post_model_1.Post.findById(postId).populate({
         path: 'comments.userId',
     });
