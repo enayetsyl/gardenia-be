@@ -77,6 +77,17 @@ const followUser = catchAsync(async(req, res) => {
   });
 })
 
+const unfollowUser = catchAsync(async(req, res) => {
+  const { followerId, followedId } = req.body;
+  const user = await UserServices.unfollowUser(followerId, followedId);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'User unfollowed successfully!',
+    data: user,
+  });
+})
+
 const getFollowers = catchAsync(async(req, res) => {
   const { userId } = req.params;
   const user = await UserServices.getFollowers(userId);
@@ -125,5 +136,5 @@ const updateDetails = catchAsync(async(req, res) => {
 })
 
 export const UserControllers = {
-  userRegister, getAllUsers, getSingleUser, uploadUserImage, uploadUserCoverImage, verifyAccount, followUser, getFollowers, getProfilePhotos, updateBio, updateDetails
+  userRegister, getAllUsers, getSingleUser, uploadUserImage, uploadUserCoverImage, verifyAccount, followUser, getFollowers, getProfilePhotos, updateBio, updateDetails, unfollowUser
  };

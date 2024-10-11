@@ -118,6 +118,35 @@ const followUser = async (followerId: string, followedId: string) => {
   return follower;
 };
 
+const unfollowUser = async (followerId: string, followedId: string) => {  
+  const follower = await User.findById(followerId);
+  const followed = await User.findById(followedId);
+
+  if (!follower || !followed) {
+    throw new AppError(httpStatus.NOT_FOUND, "User not found");
+  }
+
+  follower.followingId = follower.followingId || [];
+  followed.followersId = followed.followersId || [];
+
+  if (!follower.followingId.includes(followedId)) {
+    throw new AppError(httpStatus.BAD_REQUEST, "You are not following this user");
+  }
+
+ follower.followingCount = Math.max(0, (follower.followingCount ?? 1) - 1);
+ followed.followerCount = Math.max(0, (followed.followerCount ?? 1) - 1);
+
+  // Remove followedId and followerId from respective arrays
+  follower.followingId = follower.followingId.filter(id => id !== followedId);
+  followed.followersId = followed.followersId.filter(id => id !== followerId);
+
+
+ await follower.save();
+ await followed.save();
+
+ return follower;
+}
+
 const getFollowers = async (userId: string) => {
   const user = await User.findById(userId);
   if (!user) {
@@ -167,5 +196,6 @@ export const UserServices = {
   getFollowers,
   getProfilePhotos,
   updateBio,
-  updateDetails
+  updateDetails, 
+  unfollowUser
 };

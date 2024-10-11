@@ -28,4 +28,5 @@ router.get("/followers/:userId", user_controller_1.UserControllers.getFollowers)
 router.get("/profile-photos/:userId", user_controller_1.UserControllers.getProfilePhotos);
 router.put("/update-bio/:userId", user_controller_1.UserControllers.updateBio);
 router.put("/update-details/:userId", user_controller_1.UserControllers.updateDetails);
+router.post("/unfollow", user_controller_1.UserControllers.unfollowUser);
 exports.UserRoutes = router;

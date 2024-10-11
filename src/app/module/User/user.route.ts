@@ -37,7 +37,7 @@ router.get("/followers/:userId", UserControllers.getFollowers);
 router.get("/profile-photos/:userId", UserControllers.getProfilePhotos);
 router.put("/update-bio/:userId", UserControllers.updateBio);
 router.put("/update-details/:userId", UserControllers.updateDetails);
-
+router.post("/unfollow", UserControllers.unfollowUser);
 
 
 export const UserRoutes = router;

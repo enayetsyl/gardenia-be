@@ -82,6 +82,16 @@ const followUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, voi
         data: user,
     });
 }));
+const unfollowUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { followerId, followedId } = req.body;
+    const user = yield user_service_1.UserServices.unfollowUser(followerId, followedId);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: 'User unfollowed successfully!',
+        data: user,
+    });
+}));
 const getFollowers = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { userId } = req.params;
     const user = yield user_service_1.UserServices.getFollowers(userId);
@@ -125,5 +135,5 @@ const updateDetails = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, 
     });
 }));
 exports.UserControllers = {
-    userRegister, getAllUsers, getSingleUser, uploadUserImage, uploadUserCoverImage, verifyAccount, followUser, getFollowers, getProfilePhotos, updateBio, updateDetails
+    userRegister, getAllUsers, getSingleUser, uploadUserImage, uploadUserCoverImage, verifyAccount, followUser, getFollowers, getProfilePhotos, updateBio, updateDetails, unfollowUser
 };

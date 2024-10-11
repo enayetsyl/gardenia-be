@@ -95,6 +95,27 @@ const followUser = (followerId, followedId) => __awaiter(void 0, void 0, void 0,
     yield followed.save();
     return follower;
 });
+const unfollowUser = (followerId, followedId) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a, _b;
+    const follower = yield user_model_1.User.findById(followerId);
+    const followed = yield user_model_1.User.findById(followedId);
+    if (!follower || !followed) {
+        throw new AppError_1.default(http_status_1.default.NOT_FOUND, "User not found");
+    }
+    follower.followingId = follower.followingId || [];
+    followed.followersId = followed.followersId || [];
+    if (!follower.followingId.includes(followedId)) {
+        throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "You are not following this user");
+    }
+    follower.followingCount = Math.max(0, ((_a = follower.followingCount) !== null && _a !== void 0 ? _a : 1) - 1);
+    followed.followerCount = Math.max(0, ((_b = followed.followerCount) !== null && _b !== void 0 ? _b : 1) - 1);
+    // Remove followedId and followerId from respective arrays
+    follower.followingId = follower.followingId.filter(id => id !== followedId);
+    followed.followersId = followed.followersId.filter(id => id !== followerId);
+    yield follower.save();
+    yield followed.save();
+    return follower;
+});
 const getFollowers = (userId) => __awaiter(void 0, void 0, void 0, function* () {
     const user = yield user_model_1.User.findById(userId);
     if (!user) {
@@ -135,5 +156,6 @@ exports.UserServices = {
     getFollowers,
     getProfilePhotos,
     updateBio,
-    updateDetails
+    updateDetails,
+    unfollowUser
 };
