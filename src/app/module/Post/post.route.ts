@@ -19,4 +19,6 @@ router.delete("/delete/:postId/comments/:commentId", PostControllers.deleteComme
 router.put("/updateComment/:postId", PostControllers.updateComment);
 router.get("/getSinglePost/:id", PostControllers.getSinglePost);
 
+router.get('/searchAndFilterPosts', PostControllers.searchAndFilterPosts);
+
 export const PostRoutes = router;

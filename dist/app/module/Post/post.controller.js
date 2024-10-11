@@ -166,6 +166,19 @@ const getSinglePost = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, 
         data: post,
     });
 }));
+const searchAndFilterPosts = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const search = typeof req.query.search === 'string' ? req.query.search : undefined;
+    const category = typeof req.query.category === 'string' ? req.query.category : undefined;
+    const page = req.query.page ? Number(req.query.page) : 1;
+    // Call the service with properly typed arguments
+    const result = yield post_service_1.PostServices.searchAndFilterPosts(search, category, page);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: 'Posts fetched successfully',
+        data: result,
+    });
+}));
 exports.PostControllers = {
     getUpvote,
     createPost,
@@ -181,4 +194,5 @@ exports.PostControllers = {
     addFavorite,
     removeFavorite,
     getSinglePost,
+    searchAndFilterPosts,
 };

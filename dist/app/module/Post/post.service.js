@@ -248,6 +248,30 @@ const getSinglePost = (postId) => __awaiter(void 0, void 0, void 0, function* ()
     }
     return post;
 });
+const searchAndFilterPosts = (search, category, page) => __awaiter(void 0, void 0, void 0, function* () {
+    const limit = 10;
+    const query = {};
+    if (search) {
+        query['$or'] = [
+            { title: { $regex: search, $options: 'i' } },
+            { content: { $regex: search, $options: 'i' } }
+        ];
+    }
+    if (category) {
+        query['category'] = category;
+    }
+    // Pagination logic
+    const skip = (Number(page) - 1) * Number(limit);
+    const posts = yield post_model_1.Post.find(query)
+        .skip(skip)
+        .limit(Number(limit))
+        .populate({
+        path: 'comments.userId',
+    }).populate({
+        path: 'userId',
+    });
+    return posts;
+});
 exports.PostServices = {
     getUpvote,
     createPost,
@@ -262,5 +286,6 @@ exports.PostServices = {
     updateComment,
     addFavorite,
     removeFavorite,
-    getSinglePost
+    getSinglePost,
+    searchAndFilterPosts
 };

@@ -1,5 +1,6 @@
 import catchAsync from "../../utils/catchAsync";
 import sendResponse from "../../utils/sendResponse";
+import { Post } from "./post.model";
 import { PostServices } from "./post.service";
 import httpStatus from "http-status";
 
@@ -170,6 +171,28 @@ const getSinglePost = catchAsync(async (req, res) => {
   });
 });
 
+const searchAndFilterPosts = catchAsync(async (req, res) => {
+  const search = typeof req.query.search === 'string' ? req.query.search : undefined;
+  const category = typeof req.query.category === 'string' ? req.query.category : undefined;
+  const page = req.query.page ? Number(req.query.page) : 1;
+
+  // Call the service with properly typed arguments
+  const result = await PostServices.searchAndFilterPosts(search, category, page);
+
+
+
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Posts fetched successfully',
+    data: result,
+  });
+});
+
+
+
+
 export const PostControllers = {
   getUpvote,
   createPost,
@@ -185,4 +208,5 @@ export const PostControllers = {
   addFavorite,
   removeFavorite,
   getSinglePost,
+  searchAndFilterPosts,
 };

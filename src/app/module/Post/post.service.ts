@@ -302,6 +302,36 @@ const getSinglePost = async (postId: string): Promise<IPost> => {
   return post;
 };
 
+
+const searchAndFilterPosts = async (search?: string, category?: string, page?: number): Promise<IPost[]> => {
+  const limit = 10;
+  const query: any = {};
+  if (search) {
+    query['$or'] = [
+      { title: { $regex: search, $options: 'i' } },
+      { content: { $regex: search, $options: 'i' } }
+    ];
+  }
+
+  if (category) {
+    query['category'] = category;
+  }
+  
+  // Pagination logic
+  const skip = (Number(page) - 1) * Number(limit); 
+
+  const posts = await Post.find(query)
+    .skip(skip)
+    .limit(Number(limit))
+    .populate({
+      path: 'comments.userId',
+    }).populate({
+      path: 'userId',
+    })
+
+  return posts;
+};
+
 export const PostServices = {
   getUpvote,
   createPost,
@@ -316,5 +346,6 @@ export const PostServices = {
   updateComment,
   addFavorite,
   removeFavorite,
-  getSinglePost
+  getSinglePost,
+  searchAndFilterPosts
 };
