@@ -23,4 +23,5 @@ router.delete("/delete/:postId/comments/:commentId", post_controller_1.PostContr
 router.put("/updateComment/:postId", post_controller_1.PostControllers.updateComment);
 router.get("/getSinglePost/:id", post_controller_1.PostControllers.getSinglePost);
 router.get('/searchAndFilterPosts', post_controller_1.PostControllers.searchAndFilterPosts);
+router.get("/getUserSpecificPosts/:userId", post_controller_1.PostControllers.getUserSpecificPosts);
 exports.PostRoutes = router;

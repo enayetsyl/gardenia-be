@@ -179,9 +179,6 @@ const searchAndFilterPosts = catchAsync(async (req, res) => {
   // Call the service with properly typed arguments
   const result = await PostServices.searchAndFilterPosts(search, category, page);
 
-
-
-
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -190,7 +187,16 @@ const searchAndFilterPosts = catchAsync(async (req, res) => {
   });
 });
 
-
+const getUserSpecificPosts = catchAsync(async (req, res) => {
+  const userId = req.params.userId;
+  const posts = await PostServices.getUserSpecificPosts(userId);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Posts fetched successfully',
+    data: posts,
+  });
+});
 
 
 export const PostControllers = {
@@ -209,4 +215,5 @@ export const PostControllers = {
   removeFavorite,
   getSinglePost,
   searchAndFilterPosts,
+  getUserSpecificPosts,
 };

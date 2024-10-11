@@ -323,6 +323,7 @@ const searchAndFilterPosts = async (search?: string, category?: string, page?: n
   const posts = await Post.find(query)
     .skip(skip)
     .limit(Number(limit))
+    .sort({ upvoteCount: -1 })
     .populate({
       path: 'comments.userId',
     }).populate({
@@ -330,6 +331,41 @@ const searchAndFilterPosts = async (search?: string, category?: string, page?: n
     })
 
   return posts;
+};
+
+const getUserSpecificPosts = async (userId: string): Promise<IPost[]> => {
+  
+  const userObjectId = new mongoose.Types.ObjectId(userId);
+  const userPosts = await Post.find({ userId: userObjectId });
+
+  // console.log('userPosts', userPosts);
+
+  if (userPosts.length === 0) {
+    // Step 2: If the user has no posts, send the posts with the most upvotes
+    const mostUpvotedPosts = await Post.find()
+      .sort({ upvoteCount: -1 }) // Sort posts by upvoteCount in descending order
+      .limit(10); // Limit to 10 posts or any other number
+
+    return mostUpvotedPosts;
+  }
+
+  // Step 3: If the user has posts, categorize them and fetch max 5 posts per category
+  const categories = [...new Set(userPosts.map(post => post.category))];
+  // console.log('categories', categories);
+
+  const personalizedPosts: IPost[] = [];
+
+  // Fetch up to 5 posts for each category
+  for (const category of categories) {
+    const postsInCategory = await Post.find({ category })
+      .sort({ createdAt: -1 }) // Sort by latest posts, you can customize the sorting
+      .limit(5);
+
+    personalizedPosts.push(...postsInCategory);
+  }
+  console.log('personalizedPosts', personalizedPosts);
+
+  return personalizedPosts;
 };
 
 export const PostServices = {
@@ -347,5 +383,6 @@ export const PostServices = {
   addFavorite,
   removeFavorite,
   getSinglePost,
-  searchAndFilterPosts
+  searchAndFilterPosts,
+  getUserSpecificPosts
 };

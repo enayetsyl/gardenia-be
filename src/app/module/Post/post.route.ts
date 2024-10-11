@@ -18,7 +18,9 @@ router.put("/update/:id", upload.array('images', 5), PostControllers.updatePost)
 router.delete("/delete/:postId/comments/:commentId", PostControllers.deleteComment);
 router.put("/updateComment/:postId", PostControllers.updateComment);
 router.get("/getSinglePost/:id", PostControllers.getSinglePost);
-
 router.get('/searchAndFilterPosts', PostControllers.searchAndFilterPosts);
+router.get("/getUserSpecificPosts/:userId", PostControllers.getUserSpecificPosts);
+
+
 
 export const PostRoutes = router;

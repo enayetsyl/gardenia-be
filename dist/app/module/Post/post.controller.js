@@ -179,6 +179,16 @@ const searchAndFilterPosts = (0, catchAsync_1.default)((req, res) => __awaiter(v
         data: result,
     });
 }));
+const getUserSpecificPosts = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const userId = req.params.userId;
+    const posts = yield post_service_1.PostServices.getUserSpecificPosts(userId);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: 'Posts fetched successfully',
+        data: posts,
+    });
+}));
 exports.PostControllers = {
     getUpvote,
     createPost,
@@ -195,4 +205,5 @@ exports.PostControllers = {
     removeFavorite,
     getSinglePost,
     searchAndFilterPosts,
+    getUserSpecificPosts,
 };
