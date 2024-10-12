@@ -21,6 +21,4 @@ router.get("/getSinglePost/:id", PostControllers.getSinglePost);
 router.get('/searchAndFilterPosts', PostControllers.searchAndFilterPosts);
 router.get("/getUserSpecificPosts/:userId", PostControllers.getUserSpecificPosts);
 
-
-
 export const PostRoutes = router;

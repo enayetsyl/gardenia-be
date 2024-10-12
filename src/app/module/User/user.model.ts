@@ -23,9 +23,11 @@ const userSchema = new Schema<TUser, IUserModel>(
     },
     userImage: {
       type: String,
+      default: 'https://res.cloudinary.com/dj3qabx11/image/upload/v1728698356/user_6707a0e06e6ec4950584dce6_1728698355759.png'
           },
     coverImage: {
       type: String,
+      default: 'https://res.cloudinary.com/dj3qabx11/image/upload/v1728570563/user_6707a0e06e6ec4950584dce6_1728570562213.webp'
     },
     password: {
       type: String,
