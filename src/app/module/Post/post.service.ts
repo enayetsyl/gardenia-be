@@ -344,8 +344,13 @@ const getUserSpecificPosts = async (userId: string): Promise<IPost[]> => {
   if (userPosts.length === 0) {
     // Step 2: If the user has no posts, send the posts with the most upvotes
     const mostUpvotedPosts = await Post.find()
-      .sort({ upvoteCount: -1 }) // Sort posts by upvoteCount in descending order
-      .limit(10); // Limit to 10 posts or any other number
+      .sort({ upvoteCount: -1 }) 
+      .limit(10)
+      .populate({
+        path: 'comments.userId',
+      }).populate({
+        path: 'userId',
+      });
 
     return mostUpvotedPosts;
   }
@@ -360,7 +365,12 @@ const getUserSpecificPosts = async (userId: string): Promise<IPost[]> => {
   for (const category of categories) {
     const postsInCategory = await Post.find({ category })
       .sort({ createdAt: -1 }) // Sort by latest posts, you can customize the sorting
-      .limit(5);
+      .limit(5)
+      .populate({
+        path: 'comments.userId',
+      }).populate({
+        path: 'userId',
+      });
 
     personalizedPosts.push(...postsInCategory);
   }

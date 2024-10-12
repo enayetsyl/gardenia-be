@@ -32,11 +32,11 @@ const auth_service_1 = require("./auth.service");
 const registerUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield auth_service_1.AuthServices.registerUser(req.body);
     const { accessToken, refreshToken } = result;
-    res.cookie("refreshToken", refreshToken, {
-        httpOnly: true,
-        secure: config_1.default.NODE_ENV === "production",
-        sameSite: true,
-    });
+    // res.cookie("refreshToken", refreshToken, {
+    //   httpOnly: true,
+    //   secure: config.NODE_ENV === "production",
+    //   sameSite: true,
+    // });
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,
         success: true,
