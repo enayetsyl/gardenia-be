@@ -330,6 +330,7 @@ const searchAndFilterPosts = async (search?: string, category?: string, page?: n
       path: 'userId',
     })
 
+
   return posts;
 };
 
@@ -338,7 +339,7 @@ const getUserSpecificPosts = async (userId: string): Promise<IPost[]> => {
   const userObjectId = new mongoose.Types.ObjectId(userId);
   const userPosts = await Post.find({ userId: userObjectId });
 
-  // console.log('userPosts', userPosts);
+ 
 
   if (userPosts.length === 0) {
     // Step 2: If the user has no posts, send the posts with the most upvotes
@@ -351,7 +352,7 @@ const getUserSpecificPosts = async (userId: string): Promise<IPost[]> => {
 
   // Step 3: If the user has posts, categorize them and fetch max 5 posts per category
   const categories = [...new Set(userPosts.map(post => post.category))];
-  // console.log('categories', categories);
+  
 
   const personalizedPosts: IPost[] = [];
 
@@ -363,7 +364,6 @@ const getUserSpecificPosts = async (userId: string): Promise<IPost[]> => {
 
     personalizedPosts.push(...postsInCategory);
   }
-  console.log('personalizedPosts', personalizedPosts);
 
   return personalizedPosts;
 };

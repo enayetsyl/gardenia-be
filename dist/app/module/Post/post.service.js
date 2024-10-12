@@ -276,7 +276,6 @@ const searchAndFilterPosts = (search, category, page) => __awaiter(void 0, void 
 const getUserSpecificPosts = (userId) => __awaiter(void 0, void 0, void 0, function* () {
     const userObjectId = new mongoose_1.default.Types.ObjectId(userId);
     const userPosts = yield post_model_1.Post.find({ userId: userObjectId });
-    // console.log('userPosts', userPosts);
     if (userPosts.length === 0) {
         // Step 2: If the user has no posts, send the posts with the most upvotes
         const mostUpvotedPosts = yield post_model_1.Post.find()
@@ -286,7 +285,6 @@ const getUserSpecificPosts = (userId) => __awaiter(void 0, void 0, void 0, funct
     }
     // Step 3: If the user has posts, categorize them and fetch max 5 posts per category
     const categories = [...new Set(userPosts.map(post => post.category))];
-    // console.log('categories', categories);
     const personalizedPosts = [];
     // Fetch up to 5 posts for each category
     for (const category of categories) {
@@ -295,7 +293,6 @@ const getUserSpecificPosts = (userId) => __awaiter(void 0, void 0, void 0, funct
             .limit(5);
         personalizedPosts.push(...postsInCategory);
     }
-    console.log('personalizedPosts', personalizedPosts);
     return personalizedPosts;
 });
 exports.PostServices = {
