@@ -80,7 +80,7 @@ const forgetPassword = (userEmail) => __awaiter(void 0, void 0, void 0, function
         role: user === null || user === void 0 ? void 0 : user.role,
     };
     const resetToken = (0, tokenGenerateFunction_1.createToken)(jwtPayload, config_1.default.jwt_access_secret, '10m');
-    const resetUILink = `${config_1.default.reset_pass_ui_link}/reset-password/${user._id}/${resetToken}`;
+    const resetUILink = `${config_1.default.RESET_PASS_UI_LINK}/reset-password/${user._id}/${resetToken}`;
     (0, sendEmail_1.sendEmail)(user.email, resetUILink);
 });
 const resetPassword = (payload) => __awaiter(void 0, void 0, void 0, function* () {
